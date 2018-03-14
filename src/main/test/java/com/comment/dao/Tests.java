@@ -6,7 +6,13 @@ import com.comment.model.Goods;
 import com.comment.service.inf.IGoodsService;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrResponse;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.response.UpdateResponse;
+import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.common.SolrInputDocument;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +22,7 @@ import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
 import javax.lang.model.element.NestingKind;
+import java.io.IOException;
 import java.util.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -77,7 +84,7 @@ public class Tests {
         jedis.setnx(key_string, val_string);
         jedis.setex(key_string, 20, val_string);
 
-        String nowval = jedis.getSet(key_string, val_string+"hijk");
+        String nowval = jedis.getSet(key_string, val_string + "hijk");
         System.out.println(nowval);
 
 
@@ -113,8 +120,7 @@ public class Tests {
         jedis.hset(key_hash, "f1", "v1");
         jedis.hget(key_hash, "f1");
         jedis.hmset("hash", map);
-        List hashlist = jedis.hmget("key1","f1","f2");
-
+        List hashlist = jedis.hmget("key1", "f1", "f2");
 
 
         //common
@@ -126,16 +132,58 @@ public class Tests {
 
     }
 
-    public void solrTest(){
+    final String solrUrl = "http://db1.jwl.com:8080/solr/SimpleOrder";
 
-        final String solrUrl = "http://localhost:8080/solr";
+    @Test
+    public void solrTestSelect() throws Exception {
 
         HttpSolrClient solrClient = new HttpSolrClient.Builder(solrUrl).build();
         SolrQuery solrQuery = new SolrQuery("*:*");//封装查询参数
-        solrQuery.addField("id");
-        solrQuery.addField("name");
+        solrQuery.addField("orderId");
+        solrQuery.addField("cinemaName");
         solrQuery.setRows(10);//每页显示条数
-        //SolrResponse response =
+        QueryResponse response = solrClient.query(solrQuery);
+        SolrDocumentList documents = response.getResults();
+
+        for (SolrDocument doc : documents) {
+            System.out.println("orderId:" + doc.get("orderId")
+                    + "\tcinemaName:" + doc.get("cinemaName")
+            );
+        }
+        solrClient.close();
+    }
+
+    @Test
+    public void solrTestAdd() throws IOException, SolrServerException {
+
+        HttpSolrClient solrClient = new HttpSolrClient.Builder(solrUrl).build();
+        SolrInputDocument doc = new SolrInputDocument();
+
+        doc.addField("orderId", 1076583647);
+        doc.addField("cinemaName", "武穴万达");
+        doc.addField("errorCode", 0);
+        UpdateResponse updateResponse = solrClient.add(doc);
+    }
+
+    @Test
+    public void solrTestUpdate() throws IOException, SolrServerException {
+
+        HttpSolrClient solrClient = new HttpSolrClient.Builder(solrUrl).build();
+        SolrInputDocument doc = new SolrInputDocument();
+
+        doc.addField("orderId", 1076583647);
+        Map<String, String> map = new HashMap<>();
+        map.put("set", "杭州万达");
+        doc.addField("cinemaName", map);
+        //doc.addField("errorCode", 0);
+        UpdateResponse updateResponse = solrClient.add(doc);
+    }
+
+    @Test
+    public void solrTestDel() throws IOException, SolrServerException {
+        HttpSolrClient solrClient = new HttpSolrClient.Builder(solrUrl).build();
+        solrClient.deleteByQuery("orderId:10086");
 
     }
+
 }
