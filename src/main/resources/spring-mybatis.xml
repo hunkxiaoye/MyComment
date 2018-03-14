@@ -14,19 +14,47 @@
 
     <!-- 扫描service包下所有使用注解的类型 -->
     <context:component-scan base-package="com.comment.service"/>
-
     <!-- 配置数据库相关参数properties的属性：${url} -->
-    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <!--读取属性文件 -->
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
 
-    <!--启用缓存注解-->
-    <!-- 缓存配置 -->
-    <!--<cache:annotation-driven cache-manager="myCacheManager" />-->
-    <!--<bean id="jCacheManager" class="org.springframework.cache.jcache.JCacheManagerFactoryBean">-->
-    <!--<property name="cacheManagerUri" value="classpath:ehcache.xml"/>-->
-    <!--</bean>-->
-    <!--<bean id="myCacheManager" class="org.springframework.cache.jcache.JCacheCacheManager">-->
-    <!--<property name="cacheManager" ref="jCacheManager" />-->
-    <!--</bean>-->
+            <list>
+                <value>classpath:redis.properties</value>
+                <value>classpath:jdbc.properties</value>
+                <value>classpath:solr.properties</value>
+            </list>
+        </property>
+    </bean>
+
+<!-- Redis 开始-->
+    <bean id="JedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="${redis.pool.maxTotal}"/>
+        <property name="maxIdle" value="${redis.pool.maxIdle}"/>
+        <property name="minIdle" value="${redis.pool.minIdle}"/>
+        <property name="maxWaitMillis" value="${redis.pool.maxWaitMillis}"/>
+        <property name="testOnBorrow" value="${redis.pool.testOnBorrow}"/>
+        <property name="testOnReturn" value="${redis.pool.testOnReturn}"/>
+        <property name="testWhileIdle" value="${redis.pool.testWhileIdle}"/>
+    </bean>
+    <bean id="ShardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
+        <constructor-arg index="0" ref="JedisPoolConfig"/>
+        <constructor-arg index="1">
+            <list>
+                <bean class="redis.clients.jedis.JedisShardInfo">
+                    <constructor-arg index="0" value="${redis.list-1.ip}"/>
+                    <constructor-arg index="1" value="${redis.list-1.port}" type="int"/>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!-- Redis 结束-->
+
+
+    <!-- solr 开始-->
+    <!-- solr 结束-->
 
     <!-- 数据库连接池 -->
     <bean id="dataSourceA" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
@@ -64,7 +92,7 @@
     <!-- 配置SqlSessionFactory对象 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSourceA"/>
-        <property name="typeAliasesPackage" value="com.userDemo.model"/>
+        <property name="typeAliasesPackage" value="com.comment.model"/>
         <!-- 自动扫描mapping.xml文件 -->
         <property name="mapperLocations" value="classpath:mapper/*.xml"></property>
     </bean>
@@ -83,6 +111,8 @@
         <!-- 注入数据库连接池 -->
         <property name="dataSource" ref="dataSourceA"/>
     </bean>
+    <!-- 配置基于注解的声明式事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <!--&lt;!&ndash; aop自动代理配置，配置后直接使用注解 &ndash;&gt;-->
     <!--<aop:aspectj-autoproxy/>-->
@@ -99,7 +129,6 @@
     <!--&lt;!&ndash; 配置数据库注解aop &ndash;&gt;-->
 
 
-    <!-- 配置基于注解的声明式事务 -->
-    <tx:annotation-driven transaction-manager="transactionManager"/>
+
 
 </beans>

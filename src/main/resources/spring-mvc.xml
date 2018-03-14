@@ -19,7 +19,7 @@
     <!-- 静态资源默认servlet配置 -->
     <mvc:default-servlet-handler/>
 
-    <!--&lt;!&ndash; 拦截器 &ndash;&gt;-->
+    <!-- 拦截器 -->
     <!--<mvc:interceptors>-->
         <!--<mvc:interceptor>-->
             <!--<mvc:mapping path="/**"/>-->
@@ -51,6 +51,7 @@
 
     <!-- velocity配置 -->
     <bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <!-- <property name="configLocation" value="/WEB-INF/velocity.properties"/> -->
         <property name="resourceLoaderPath" value="/WEB-INF/velocity/"/>
         <property name="velocityProperties">
             <props>
