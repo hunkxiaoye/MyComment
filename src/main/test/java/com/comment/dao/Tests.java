@@ -2,7 +2,10 @@ package com.comment.dao;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.comment.common.JedisUtil;
+import com.comment.common.SolrUtil;
 import com.comment.model.Goods;
+import com.comment.model.Order;
 import com.comment.service.inf.IGoodsService;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrResponse;
@@ -32,6 +35,12 @@ public class Tests {
     private IGoodsService goodsService;
     @Autowired
     private ShardedJedisPool pool;
+
+    @Autowired
+    private JedisUtil redisClient;
+
+    @Autowired
+    private SolrUtil solrUtil;
 
     @Test
     public void Tests() {
@@ -67,20 +76,20 @@ public class Tests {
 
         HashMap<String, Goods> hashMap = new HashMap<>();
         hashMap.put("hash", model);
-
+        jedis.close();
 
     }
 
     @Test
     public void JedisTest() {
         ShardedJedis jedis = pool.getResource();
-
         //String
         String key_string = "string";
         String val_string = "abcdefg";
-        jedis.set(key_string, val_string);
-
-        System.out.println(jedis.get(key_string));
+        //jedis.set(key_string, val_string);
+        redisClient.set(key_string, val_string);
+        System.out.println(redisClient.get(key_string, String.class));
+        //System.out.println(jedis.get(key_string));
         jedis.setnx(key_string, val_string);
         jedis.setex(key_string, 20, val_string);
 
@@ -184,6 +193,14 @@ public class Tests {
         HttpSolrClient solrClient = new HttpSolrClient.Builder(solrUrl).build();
         solrClient.deleteByQuery("orderId:10086");
 
+    }
+
+    @Test
+    public void solrUtil() throws IOException, SolrServerException {
+        Order order = new Order();
+        order.setOrderId(10010L);
+        order.setCinemaName("武穴万达");
+        solrUtil.add(order,"SimpleOrder");
     }
 
 }
