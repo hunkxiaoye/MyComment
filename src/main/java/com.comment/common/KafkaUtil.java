@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 @Component
@@ -26,25 +28,25 @@ static {
     kafkaConsumer =new KafkaConsumer<>(KafkaProperties.Cget());
 
 }
-    public  static void send(String topic,String msg){
-        kafkaProducer.send(new ProducerRecord<>(topic,msg));
+    public  static void send(String topic,Object msg){
+      String key =String.valueOf(System.currentTimeMillis());
+        kafkaProducer.send(new ProducerRecord<>(topic,key,JSON.toJSONString(msg)));
+    }
+    public static void flush()
+    {
+        kafkaProducer.flush();
     }
 
 
-    public  static void process(){
-        while (true){
-            ConsumerRecords<String, String> records = kafkaConsumer.poll(100);
-            for (ConsumerRecord<String,String> record : records){
-                String msg = record.value();
-                String key = record.key();
-                System.out.println(String.format("offset:%d ,key:%d ,value:%s%n",record.offset(), key, msg));
-                try {
-                    logger.info("消息处理成功, ID: {}, 内容: {}", key, msg);
-                }catch (Exception e){
+    public  static void process(String topics){
 
-                        logger.error("消息处理失败, ID: {}, 内容: {}, 错误:{}", key, msg, e);
-                    }
-                }
+        List<String> list = new ArrayList<>();
+        list.add(topics);
+        kafkaConsumer.subscribe(list);
+            while (true) {
+                ConsumerRecords<String, String> records = kafkaConsumer.poll(100);
+                for (ConsumerRecord<String, String> record : records)
+                    System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
             }
         }
     }

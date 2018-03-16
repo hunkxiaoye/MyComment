@@ -206,15 +206,17 @@ public class Tests {
     }
     @Test
     public void kafkaSendTest(){
-       String topic = "yp_demo_comment";
+       String topic = "yp_comment";
        String msg ="kafka test!";
-       for (int i=0;i<10;i++)
+       for (int i=0;i<100;i++)
         KafkaUtil.send(topic,msg);
+
+       KafkaUtil.flush();
     }
     @Test
     public void kafkaprocessTest(){
 
-        KafkaUtil.process();
+        KafkaUtil.process("yp_comment");
     }
 
 }

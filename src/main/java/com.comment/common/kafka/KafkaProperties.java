@@ -32,14 +32,14 @@ public class KafkaProperties {
     public static Properties Cget() {
 
         Properties props = new Properties();
-        props.put("zookeeper.connect", "hadoop2.jwl.com:2181,hadoop3.jwl.com:2181,hadoop4.jwl.com:2181");
+        //props.put("zookeeper.connect", "hadoop2.jwl.com:2181,hadoop3.jwl.com:2181,hadoop4.jwl.com:2181");
+        props.put("bootstrap.servers", "hadoop2.jwl.com:9092,hadoop3.jwl.com:9092,hadoop4.jwl.com:9092");
         //消费者的组id
-        props.put("group.id", "yp");
+        props.put("group.id", "test_yp");
         props.put("enable.auto.commit", "true");
         props.put("auto.commit.interval.ms", "1000");
-        props.put("zookeeper.session.timeout.ms", "10000");
-        props.put("zookeeper.sync.time.ms", "200");
-        props.put("serializer.class", "kafka.serializer.StringEncoder");
+        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         return props;
 
     }
