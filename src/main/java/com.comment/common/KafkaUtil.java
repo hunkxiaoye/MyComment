@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-@Component
+
 public class KafkaUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(KafkaUtil.class);
