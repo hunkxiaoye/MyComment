@@ -214,6 +214,20 @@
         </dependency>
         <!--sorl 结束-->
 
+        <!--kafka 开始-->
+        <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka -->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_2.12</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <!--kafka 结束-->
     </dependencies>
     <build>
         <finalName>comment</finalName>

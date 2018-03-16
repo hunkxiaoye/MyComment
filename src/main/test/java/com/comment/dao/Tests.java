@@ -3,6 +3,7 @@ package com.comment.dao;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.comment.common.JedisUtil;
+import com.comment.common.KafkaUtil;
 import com.comment.common.SolrUtil;
 import com.comment.model.Goods;
 import com.comment.model.Order;
@@ -41,6 +42,8 @@ public class Tests {
 
     @Autowired
     private SolrUtil solrUtil;
+    @Autowired
+    private KafkaUtil kafkaUtil;
 
     @Test
     public void Tests() {
@@ -201,6 +204,18 @@ public class Tests {
         order.setOrderId(10010L);
         order.setCinemaName("武穴万达");
         solrUtil.add(order,"SimpleOrder");
+    }
+    @Test
+    public void kafkaSendTest(){
+       String topic = "yp_demo_comment";
+       String msg ="kafka test!";
+       for (int i=0;i<10;i++)
+        kafkaUtil.send(topic,msg);
+    }
+    @Test
+    public void kafkaprocessTest(){
+
+        kafkaUtil.process();
     }
 
 }
