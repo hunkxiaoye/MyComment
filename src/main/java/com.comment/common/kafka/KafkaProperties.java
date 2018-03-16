@@ -13,27 +13,27 @@ public class KafkaProperties {
 
     private KafkaProducer<String, String> producer;
     private KafkaConsumer<String, String> consumer;
-
+    private Properties props = new Properties();
 
     public KafkaProducer Pget() {
         //"hadoop2.jwl.com:9092,hadoop3.jwl.com:9092,hadoop4.jwl.com:9092"
-        Properties props = new Properties();
+
         String host = "hadoop2.jwl.com:9092,hadoop3.jwl.com:9092,hadoop4.jwl.com:9092";
         props.put("bootstrap.servers", host);
         props.put("request.required.acks", "-1");
         props.put("producer.type", "sync");
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        return producer = new KafkaProducer<>(props);
+        producer = new KafkaProducer<>(props);
+        props.clear();
+        return producer;
 
 
     }
 
     public KafkaConsumer Cget() {
         Properties props = new Properties();
-
         props.put("zookeeper.connect", "hadoop2.jwl.com:2181");
-
         //消费者的组id
         props.put("group.id", "yp");
         props.put("enable.auto.commit", "true");
@@ -41,6 +41,8 @@ public class KafkaProperties {
         props.put("zookeeper.session.timeout.ms", "10000");
         props.put("zookeeper.sync.time.ms", "200");
         props.put("serializer.class", "kafka.serializer.StringEncoder");
-        return consumer = new KafkaConsumer<>(props);
+        consumer = new KafkaConsumer<>(props);
+        props.clear();
+        return  consumer;
     }
 }
