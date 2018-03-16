@@ -42,8 +42,7 @@ public class Tests {
 
     @Autowired
     private SolrUtil solrUtil;
-    @Autowired
-    private KafkaUtil kafkaUtil;
+
 
     @Test
     public void Tests() {
@@ -210,12 +209,12 @@ public class Tests {
        String topic = "yp_demo_comment";
        String msg ="kafka test!";
        for (int i=0;i<10;i++)
-        kafkaUtil.send(topic,msg);
+        KafkaUtil.send(topic,msg);
     }
     @Test
     public void kafkaprocessTest(){
 
-        kafkaUtil.process();
+        KafkaUtil.process();
     }
 
 }
