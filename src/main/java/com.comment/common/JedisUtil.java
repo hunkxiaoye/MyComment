@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +18,7 @@ import java.util.Set;
 public class JedisUtil {
 
     @Autowired
-    private  ShardedJedisPool sPool;
+    private ShardedJedisPool sPool;
 
     private static final Logger log = LoggerFactory.getLogger(JedisUtil.class);
 
@@ -113,10 +114,11 @@ public class JedisUtil {
 
         }
     }
-    public <T> T hget(Class<T> type,String key,String field){
+
+    public <T> T hget(Class<T> type, String key, String field) {
         ShardedJedis jedis = sPool.getResource();
         try {
-          return JSON.parseObject(jedis.hget(key,field), type);
+            return JSON.parseObject(jedis.hget(key, field), type);
         } catch (Exception e) {
             log.error("错误 : " + e);
             throw e;
@@ -126,7 +128,7 @@ public class JedisUtil {
         }
     }
 
-    public void del(String key){
+    public void del(String key) {
         ShardedJedis jedis = sPool.getResource();
         try {
             jedis.del(key);
@@ -139,15 +141,15 @@ public class JedisUtil {
         }
     }
 
-    public void hdel(String key,String...fields){
+    public void hdel(String key, String... fields) {
 
         ShardedJedis jedis = sPool.getResource();
 
         try {
-            if (fields == null || fields.length<1) {
+            if (fields == null || fields.length < 1) {
                 throw new Exception("请指定要删除的fields");
             }
-            jedis.hdel(key,fields);
+            jedis.hdel(key, fields);
         } catch (Exception e) {
             log.error("错误 : " + e);
         } finally {
@@ -164,7 +166,7 @@ public class JedisUtil {
         } catch (Exception e) {
             log.error("错误 : " + e);
             throw e;
-        }finally{
+        } finally {
             jedis.close();
         }
 
@@ -179,13 +181,14 @@ public class JedisUtil {
         } catch (Exception e) {
             log.error("错误 : " + e);
             throw e;
-        }finally{
+        } finally {
             jedis.close();
         }
     }
 
     /**
      * 获取一个哈希表中的所有field名
+     *
      * @param key hashKey 名称
      * @return
      */
@@ -196,7 +199,7 @@ public class JedisUtil {
         } catch (Exception e) {
             log.error("错误 : " + e);
             throw e;
-        }finally{
+        } finally {
             jedis.close();
         }
     }
@@ -204,6 +207,7 @@ public class JedisUtil {
 
     /**
      * 哈希表 key 中所有域的值
+     *
      * @param key hashKey 名称
      * @return
      */
@@ -214,13 +218,14 @@ public class JedisUtil {
         } catch (Exception e) {
             log.error("错误 : " + e);
             throw e;
-        }finally{
+        } finally {
             jedis.close();
         }
     }
 
     /**
      * 返回哈希表 key 中，所有的域和值
+     *
      * @param key key hashKey 名称
      * @return
      */
@@ -231,7 +236,7 @@ public class JedisUtil {
         } catch (Exception e) {
             log.error("错误 : " + e);
             throw e;
-        }finally{
+        } finally {
             jedis.close();
         }
     }
@@ -239,29 +244,31 @@ public class JedisUtil {
 
     /**
      * 计数器
+     *
      * @param key
      * @param seconds
      * @return
      */
-    public long inc(String key,int seconds){
+    public long inc(String key, int seconds) {
         ShardedJedis jedis = sPool.getResource();
         try {
             boolean exist = jedis.exists(key);
             long count = jedis.incr(key);
-            if(!exist){
+            if (!exist) {
                 jedis.expire(key, seconds);
             }
             return count;
         } catch (Exception e) {
             log.error("错误 : " + e);
             throw e;
-        }finally{
+        } finally {
             jedis.close();
         }
     }
 
     /**
      * 递减
+     *
      * @param key
      * @param seconds
      * @return
@@ -269,7 +276,7 @@ public class JedisUtil {
     public long decr(String key, int seconds) {
         ShardedJedis jedis = sPool.getResource();
         try {
-            Long val = this.get(key,Long.class);
+            Long val = this.get(key, Long.class);
             if (val > 0) {
                 return jedis.decr(key);
             }

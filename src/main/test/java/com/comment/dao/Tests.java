@@ -195,26 +195,37 @@ public class Tests {
         HttpSolrClient solrClient = new HttpSolrClient.Builder(solrUrl).build();
         solrClient.deleteByQuery("orderId:10086");
 
+
     }
 
     @Test
     public void solrUtil() throws IOException, SolrServerException {
-        Order order = new Order();
-        order.setOrderId(10010L);
-        order.setCinemaName("武穴万达");
-        solrUtil.add(order,"SimpleOrder");
+//        Order order = new Order();
+//        order.setOrderId(10010L);
+//        order.setCinemaName("黄石万达");
+//        solrUtil.add(order,"SimpleOrder");
+//       // solrUtil.del("orderId",10010,"SimpleOrder");
+//        List<Object> list =new ArrayList<>();
+//        list.add(1076583647);
+//        list.add(21312313);
+//        solrUtil.mdelbyid(list,"SimpleOrder");
+        List<Order> orderlist = solrUtil.selectquery("", "SimpleOrder", null, 1, 3, null, null, Order.class);
+        for (Order order : orderlist)
+            System.out.println("id : " + order.getOrderId() + "cinemaName ：" + order.getCinemaName());
     }
-    @Test
-    public void kafkaSendTest(){
-       String topic = "yp_comment";
-       String msg ="kafka test!";
-       for (int i=0;i<100;i++)
-        KafkaUtil.send(topic,msg);
 
-       KafkaUtil.flush();
-    }
     @Test
-    public void kafkaprocessTest(){
+    public void kafkaSendTest() {
+        String topic = "yp_comment";
+        String msg = "kafka test!";
+        for (int i = 0; i < 100; i++)
+            KafkaUtil.send(topic, msg);
+
+        KafkaUtil.flush();
+    }
+
+    @Test
+    public void kafkaprocessTest() {
 
         KafkaUtil.process("yp_comment");
     }

@@ -21,32 +21,34 @@ public class KafkaUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(KafkaUtil.class);
 
-    private static KafkaProducer<String,String> kafkaProducer;
-    private static KafkaConsumer<String,String> kafkaConsumer;
-static {
-    kafkaProducer =new KafkaProducer<>(KafkaProperties.Pget());
-    kafkaConsumer =new KafkaConsumer<>(KafkaProperties.Cget());
+    private static KafkaProducer<String, String> kafkaProducer;
+    private static KafkaConsumer<String, String> kafkaConsumer;
 
-}
-    public  static void send(String topic,Object msg){
-      String key =String.valueOf(System.currentTimeMillis());
-        kafkaProducer.send(new ProducerRecord<>(topic,key,JSON.toJSONString(msg)));
+    static {
+        kafkaProducer = new KafkaProducer<>(KafkaProperties.Pget());
+        kafkaConsumer = new KafkaConsumer<>(KafkaProperties.Cget());
+
     }
-    public static void flush()
-    {
+
+    public static void send(String topic, Object msg) {
+        String key = String.valueOf(System.currentTimeMillis());
+        kafkaProducer.send(new ProducerRecord<>(topic, key, JSON.toJSONString(msg)));
+    }
+
+    public static void flush() {
         kafkaProducer.flush();
     }
 
 
-    public  static void process(String topics){
+    public static void process(String topics) {
 
         List<String> list = new ArrayList<>();
         list.add(topics);
         kafkaConsumer.subscribe(list);
-            while (true) {
-                ConsumerRecords<String, String> records = kafkaConsumer.poll(100);
-                for (ConsumerRecord<String, String> record : records)
-                    System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
-            }
+        while (true) {
+            ConsumerRecords<String, String> records = kafkaConsumer.poll(100);
+            for (ConsumerRecord<String, String> record : records)
+                System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
         }
     }
+}

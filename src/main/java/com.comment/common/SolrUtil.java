@@ -1,9 +1,12 @@
 package com.comment.common;
 
 
+import com.alibaba.fastjson.JSON;
+import com.comment.common.Solr.SolrClientUtil;
+import com.comment.common.Solr.SortType;
+import javafx.scene.control.TableColumn;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.*;
 
 
 @Component
@@ -21,85 +25,90 @@ public class SolrUtil {
     private static final Logger log = LoggerFactory.getLogger(SolrUtil.class);
 
     @Autowired
-   private SolrClientUtil solrClientUtil;
+    private SolrClientUtil solrClientUtil;
 
-    public void add(Object model,String corname) throws IOException, SolrServerException {
+    public void add(Object model, String corname) throws IOException, SolrServerException {
         solrClientUtil.getReadServer(corname).addBean(model);
     }
 
-public SolrDocumentList select(String query ,String corname)throws IOException, SolrServerException{
-    SolrQuery solrQuery = new SolrQuery();//封装查询参数
-    if (query==null||query.equals(""))
-        solrQuery.setQuery("*:*");
-    else
-        solrQuery.setQuery(query);
-    solrQuery.addField("orderId");
-    solrQuery.addField("cinemaName");
-    solrQuery.setRows(10);//每页显示条数
+    public <T> List<T> selectquery(String query, String corename, Map<String, String> sort,
+                                   Integer startIndex, Integer pageSize, String[] facetFileds,
+                                   String filterQuery, Class<T> clazz) throws IOException, SolrServerException {
+        SolrQuery solrQuery = new SolrQuery();//封装查询参数
+        if (query == null || query.equals("")) {
+            solrQuery.setQuery("*:*");
+        } else {
+            solrQuery.setQuery(query);
+        }
+        //Test
+        //solrQuery.addField("orderId");
+        //solrQuery.addField("cinemaName");
+        if (filterQuery != null) {
+            solrQuery.setFilterQueries(filterQuery);
+        }
+        if (sort != null) {
+            //添加排序条件
+            Set<String> sortkey = sort.keySet();
+            for (String key : sortkey) {
+                if (sort.get(key).equals(SortType.ASC.value())) {
+                    solrQuery.setSort(key, SolrQuery.ORDER.asc);
+                } else {
+                    solrQuery.setSort(key, SolrQuery.ORDER.desc);
+                }
+            }
+        }
 
-    QueryResponse response = solrClientUtil.getReadServer(corname).query(solrQuery);
-    SolrDocumentList documents = response.getResults();
-    return documents;
-}
-//    public <T> T createquery(Map<String, Object> property, Map<String, String> sort,
-//                             Integer startIndex, Integer pageSize, String[] facetFileds,
-//                             String filterQuery) {
-//        SolrQuery sq = new SolrQuery();
-//        sq.setQuery("*:*");
-//
-//        if (filterQuery != null) {
-//            sq.setFilterQueries(filterQuery);
-//        }
-//        if (property != null) {
-//            //添加查询条件
-//            property.entrySet().forEach(pro -> {
-//                Object o = pro.getValue();
-//                String key = pro.getKey();
-//                if (StringUtils.isEmpty(o)) return;
-//                if (o.getClass().isArray()) {
-//                    StringBuilder sb = new StringBuilder();
-//                    Object[] values = (Object[]) o;
-//                    for (Object value : values) {
-//                        if (sb.length() > 0) sb.append(" OR ");
-//                        sb.append(key + ":" + value);
-//                    }
-//                    sq.addFilterQuery(sb.toString());
-//                } else {
-//                    sq.addFilterQuery(key + ":" + o);
-//                }
-//            });
-//        }
-//
-//        if (sort != null) {
-//            //添加排序条件
-//            Set<String> sortkey = sort.keySet();
-//            for (String key : sortkey) {
-//                if (sort.get(key).equals(TableColumn.SortType..value())){
-//                    sq.setSort(key, SolrQuery.ORDER.asc);
-//                }else{
-//                    sq.setSort(key, SolrQuery.ORDER.desc);
-//                }
-//            }
-//        }
-//
-//        //分页
-//        if (startIndex != null && pageSize != null) {
-//            sq.setStart((startIndex - 1) * pageSize);
-//            sq.setRows(pageSize);
-//        }
-//
-//        if (facetFileds != null && facetFileds.length > 0) {
-//            sq.setFacet(true);
-//            sq.setFacetMinCount(1);
-//            sq.addFacetField(facetFileds);
-//        }
-//        return sq;
-//    }
+        //分页
+        if (startIndex != null && pageSize != null) {
+            solrQuery.setStart((startIndex - 1) * pageSize);
+            solrQuery.setRows(pageSize);
+        }
 
-    public void del(String idname, Long idvalue,String corname)
-            throws IOException, SolrServerException
-    {
+        if (facetFileds != null && facetFileds.length > 0) {
+            solrQuery.setFacet(true);
+            solrQuery.setFacetMinCount(1);
+            solrQuery.addFacetField(facetFileds);
+        }
+
+
+        QueryResponse response = solrClientUtil.getReadServer(corename).query(solrQuery);
+
+        List<T> doc = response.getBeans(clazz);
+        return doc;
+    }
+
+    public void querydel(String idname, Object idvalue, String corname)
+            throws IOException, SolrServerException {
         String deltxt = idname + ":" + String.valueOf(idvalue);
         solrClientUtil.getReadServer(corname).deleteByQuery(deltxt);
+    }
+
+    public void mquerydel(String idname, List<Object> values, String corname)
+            throws IOException, SolrServerException {
+        String deltxt = "";
+        for (int i = 0; i < values.size(); i++) {
+            if (i == (values.size() - 1))
+                deltxt += idname + ":" + String.valueOf(values.get(i));
+            else {
+                deltxt += idname + ":" + String.valueOf(values.get(i) + " OR ");
+            }
+
+        }
+
+        solrClientUtil.getReadServer(corname).deleteByQuery(deltxt);
+
+    }
+
+    public void delbyid(Object id, String corname) throws IOException, SolrServerException {
+        solrClientUtil.getReadServer(corname).deleteById(String.valueOf(id));
+    }
+
+    public void mdelbyid(List<Object> ids, String corname) throws IOException, SolrServerException {
+        List<String> list = new ArrayList<>();
+        for (Object obj : ids) {
+            list.add(String.valueOf(obj));
+        }
+
+        solrClientUtil.getReadServer(corname).deleteById(list);
     }
 }
