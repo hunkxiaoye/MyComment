@@ -3,24 +3,24 @@ package com.comment.model;
 import org.apache.solr.client.solrj.beans.Field;
 
 public class Order {
-    @Field
-    private Long orderId;
-    @Field
-    private String cinemaName;
+    @Field("orderId")
+    private String orderid;
+    @Field("cinemaName")
+    private String cinemaname;
 
-    public Long getOrderId() {
-        return orderId;
+    public String getOrderid() {
+        return orderid;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setOrderid(String orderid) {
+        this.orderid = orderid;
     }
 
-    public String getCinemaName() {
-        return cinemaName;
+    public String getCinemaname() {
+        return cinemaname;
     }
 
-    public void setCinemaName(String cinemaName) {
-        this.cinemaName = cinemaName;
+    public void setCinemaname(String cinemaname) {
+        this.cinemaname = cinemaname;
     }
 }

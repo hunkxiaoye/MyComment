@@ -1,15 +1,10 @@
-package com.comment.common;
+package com.comment.common.Solr;
 
 
-import com.alibaba.fastjson.JSON;
-import com.comment.common.Solr.SolrClientUtil;
-import com.comment.common.Solr.SortType;
-import javafx.scene.control.TableColumn;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocumentList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +26,21 @@ public class SolrUtil {
         solrClientUtil.getReadServer(corname).addBean(model);
     }
 
+    /**
+     *
+     * @param query 查询语句
+     * @param corename 核心名称
+     * @param sort   排序
+     * @param startIndex 开始页数
+     * @param pageSize 每页的条数
+     * @param facetFileds
+     * @param filterQuery
+     * @param clazz 实体类型
+     * @param <T>
+     * @return
+     * @throws IOException
+     * @throws SolrServerException
+     */
     public <T> List<T> selectquery(String query, String corename, Map<String, String> sort,
                                    Integer startIndex, Integer pageSize, String[] facetFileds,
                                    String filterQuery, Class<T> clazz) throws IOException, SolrServerException {
@@ -40,9 +50,7 @@ public class SolrUtil {
         } else {
             solrQuery.setQuery(query);
         }
-        //Test
-        //solrQuery.addField("orderId");
-        //solrQuery.addField("cinemaName");
+
         if (filterQuery != null) {
             solrQuery.setFilterQueries(filterQuery);
         }
@@ -77,12 +85,28 @@ public class SolrUtil {
         return doc;
     }
 
+    /**
+     * 删除（不推荐）
+     * @param idname 删除id 名称
+     * @param idvalue
+     * @param corname
+     * @throws IOException
+     * @throws SolrServerException
+     */
     public void querydel(String idname, Object idvalue, String corname)
             throws IOException, SolrServerException {
         String deltxt = idname + ":" + String.valueOf(idvalue);
         solrClientUtil.getReadServer(corname).deleteByQuery(deltxt);
     }
 
+    /**
+     * 批量删除 （不推荐）
+     * @param idname
+     * @param values
+     * @param corname
+     * @throws IOException
+     * @throws SolrServerException
+     */
     public void mquerydel(String idname, List<Object> values, String corname)
             throws IOException, SolrServerException {
         String deltxt = "";
@@ -99,10 +123,24 @@ public class SolrUtil {
 
     }
 
+    /**
+     * 删除单体
+     * @param id 索引id
+     * @param corname 核心名称
+     * @throws IOException
+     * @throws SolrServerException
+     */
     public void delbyid(Object id, String corname) throws IOException, SolrServerException {
         solrClientUtil.getReadServer(corname).deleteById(String.valueOf(id));
     }
 
+    /**
+     * 批量删除
+     * @param ids 索引id
+     * @param corname 核心名称
+     * @throws IOException
+     * @throws SolrServerException
+     */
     public void mdelbyid(List<Object> ids, String corname) throws IOException, SolrServerException {
         List<String> list = new ArrayList<>();
         for (Object obj : ids) {

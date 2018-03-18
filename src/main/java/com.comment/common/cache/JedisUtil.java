@@ -1,4 +1,4 @@
-package com.comment.common;
+package com.comment.common.cache;
 
 import com.alibaba.fastjson.JSON;
 
@@ -22,6 +22,13 @@ public class JedisUtil {
 
     private static final Logger log = LoggerFactory.getLogger(JedisUtil.class);
 
+    /**
+     *获取缓存
+     * @param key
+     * @param type 缓存类型
+     * @param <T>
+     * @return
+     */
     public <T> T get(String key, Class<T> type) {
         ShardedJedis jedis = sPool.getResource();
 
@@ -37,7 +44,11 @@ public class JedisUtil {
 
     }
 
-
+    /**
+     *加入缓存
+     * @param key
+     * @param value
+     */
     public void set(String key, Object value) {
         ShardedJedis jedis = sPool.getResource();
         try {
@@ -51,7 +62,12 @@ public class JedisUtil {
 
     }
 
-    //set(设置过期时间版)
+    /**
+     * set(设置过期时间版)
+     * @param key
+     * @param value
+     * @param seconds
+     */
     public void set(String key, Object value, int seconds) {
         ShardedJedis jedis = sPool.getResource();
         try {
@@ -65,7 +81,14 @@ public class JedisUtil {
 
     }
 
-    //set(无重复则添加)
+
+    /**
+     * set(无重复则添加)
+     * @param key
+     * @param value
+     * @param seconds
+     * @return
+     */
     public boolean setnx(String key, Object value, int seconds) {
         ShardedJedis jedis = sPool.getResource();
         try {
@@ -87,7 +110,15 @@ public class JedisUtil {
 
     }
 
-    //hashset(带过期时间)
+
+
+    /**
+     * hashset(带过期时间)
+     * @param key
+     * @param field
+     * @param value
+     * @param seconds
+     */
     public void hset(String key, String field, Object value, int seconds) {
         ShardedJedis jedis = sPool.getResource();
         try {
@@ -101,7 +132,13 @@ public class JedisUtil {
 
         }
     }
-
+    /**
+     * hashset(不带过期时间)
+     * @param key
+     * @param field
+     * @param value
+     * @param
+     */
     public void hset(String key, String field, Object value) {
         ShardedJedis jedis = sPool.getResource();
         try {
@@ -115,6 +152,14 @@ public class JedisUtil {
         }
     }
 
+    /**
+     * hashget
+     * @param type
+     * @param key
+     * @param field
+     * @param <T>
+     * @return
+     */
     public <T> T hget(Class<T> type, String key, String field) {
         ShardedJedis jedis = sPool.getResource();
         try {
@@ -128,6 +173,10 @@ public class JedisUtil {
         }
     }
 
+    /**
+     * 删除缓存
+     * @param key
+     */
     public void del(String key) {
         ShardedJedis jedis = sPool.getResource();
         try {
@@ -141,6 +190,11 @@ public class JedisUtil {
         }
     }
 
+    /**
+     * hash类型删除
+     * @param key
+     * @param fields
+     */
     public void hdel(String key, String... fields) {
 
         ShardedJedis jedis = sPool.getResource();
@@ -158,6 +212,12 @@ public class JedisUtil {
         }
     }
 
+    /**
+     * hash批量添加
+     * @param key
+     * @param map
+     * @param seconds
+     */
     public void hmset(String key, Map<String, String> map, int seconds) {
         ShardedJedis jedis = sPool.getResource();
         try {
@@ -173,7 +233,12 @@ public class JedisUtil {
 
     }
 
-
+    /**
+     * hash批量获取
+     * @param key
+     * @param fields
+     * @return
+     */
     public List<String> hmget(String key, String... fields) {
         ShardedJedis jedis = sPool.getResource();
         try {

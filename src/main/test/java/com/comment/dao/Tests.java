@@ -1,15 +1,14 @@
 package com.comment.dao;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.comment.common.JedisUtil;
-import com.comment.common.KafkaUtil;
-import com.comment.common.SolrUtil;
+import com.comment.common.cache.JedisUtil;
+import com.comment.common.Solr.SolrUtil;
+import com.comment.common.kafka.KafkaProducers;
+import com.comment.common.kafka.TestConsumer;
 import com.comment.model.Goods;
 import com.comment.model.Order;
 import com.comment.service.inf.IGoodsService;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -25,7 +24,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
-import javax.lang.model.element.NestingKind;
 import java.io.IOException;
 import java.util.*;
 
@@ -42,7 +40,6 @@ public class Tests {
 
     @Autowired
     private SolrUtil solrUtil;
-
 
     @Test
     public void Tests() {
@@ -209,25 +206,33 @@ public class Tests {
 //        list.add(1076583647);
 //        list.add(21312313);
 //        solrUtil.mdelbyid(list,"SimpleOrder");
-        List<Order> orderlist = solrUtil.selectquery("", "SimpleOrder", null, 1, 3, null, null, Order.class);
+        Map<String, String> map = new HashMap<>();
+        map.put("createTime", "desc");
+        List<Order> orderlist = solrUtil.selectquery("", "SimpleOrder", map, 1, 3, null, null, Order.class);
         for (Order order : orderlist)
-            System.out.println("id : " + order.getOrderId() + "cinemaName ：" + order.getCinemaName());
+            System.out.println("id : " + order.getOrderid() + "cinemaName ：" + order.getCinemaname());
     }
+
+    @Autowired
+    private KafkaProducers kafkaProducers;
 
     @Test
     public void kafkaSendTest() {
         String topic = "yp_comment";
         String msg = "kafka test!";
         for (int i = 0; i < 100; i++)
-            KafkaUtil.send(topic, msg);
+            kafkaProducers.send(topic, msg);
 
-        KafkaUtil.flush();
+        kafkaProducers.flush();
     }
+
+    @Autowired
+    private TestConsumer testConsumer;
 
     @Test
     public void kafkaprocessTest() {
 
-        KafkaUtil.process("yp_comment");
+        testConsumer.start();
     }
 
 }

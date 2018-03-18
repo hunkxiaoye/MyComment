@@ -1,0 +1,12 @@
+package com.comment.common.kafka.annotation;
+
+import java.lang.annotation.*;
+
+@Documented
+@Inherited
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface KafkaConf {
+    String topic() default "";
+    String groupid() default "";
+}
