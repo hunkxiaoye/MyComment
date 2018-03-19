@@ -1,5 +1,6 @@
 package com.comment.common.kafka;
 
+import com.alibaba.fastjson.JSON;
 import com.comment.common.kafka.annotation.KafkaConf;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
@@ -21,7 +22,7 @@ public abstract class AbstractConsumer<T>  {
 
     protected Class<T> msgClass;
     protected KafkaConf kafkaConf;
-    protected KafkaConsumer<String, T> kafkaConsumer = null;
+    protected KafkaConsumer<String, String> kafkaConsumer = null;
 
     @Autowired
     private KafkaProperties kafkaProperties;
@@ -37,16 +38,22 @@ public abstract class AbstractConsumer<T>  {
      */
     public void start() {
         init();
-        //获取消息
-        List<String> list = new ArrayList<>();
-        list.add(kafkaConf.topic());
-        kafkaConsumer.subscribe(list);
-        while (true) {
-            ConsumerRecords<String, T> records = kafkaConsumer.poll(100000);
-            for (ConsumerRecord<String, T> record : records) {
-                this.process(record.value());
-                System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
-            }
+        for (int i = 0; i < kafkaConf.threads(); i++){
+            Thread th = new Thread(()->{
+                //获取消息
+                List<String> list = new ArrayList<>();
+                list.add(kafkaConf.topic());
+                kafkaConsumer.subscribe(list);
+                while (true) {
+                    ConsumerRecords<String, String> records = kafkaConsumer.poll(100000);
+                    for (ConsumerRecord<String, String> record : records) {
+                        T t = JSON.parseObject(record.value(), msgClass);
+                        this.process(t);
+                        System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+                    }
+                }
+            });
+            th.start();
         }
     }
 

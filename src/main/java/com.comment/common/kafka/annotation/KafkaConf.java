@@ -9,4 +9,5 @@ import java.lang.annotation.*;
 public @interface KafkaConf {
     String topic() default "";
     String groupid() default "";
+    int threads() default 1;
 }

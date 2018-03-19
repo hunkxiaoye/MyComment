@@ -54,38 +54,38 @@
 
     <!-- Redis 结束-->
 
-    <!-- kafka 开始-->
-    <bean id="producerProperties" class="java.util.HashMap">
-        <constructor-arg>
-            <map>
-                <entry key="bootstrap.servers" value="${bootstrap.servers}" />
-                <entry key="retries" value="${retries}" />
-                <entry key="batch.size" value="${batch.size}" />
-                <entry key="linger.ms" value="${linger.ms}" />
-                <entry key="buffer.memory" value="${buffer.memory}" />
-                <entry key="acks" value="${acks}" />
-                <entry key="key.serializer" value="org.apache.kafka.common.serialization.StringSerializer" />
-                <entry key="value.serializer" value="org.apache.kafka.common.serialization.StringSerializer" />
-            </map>
-        </constructor-arg>
-    </bean>
+    <!--&lt;!&ndash; kafka 开始&ndash;&gt;-->
+    <!--<bean id="producerProperties" class="java.util.HashMap">-->
+        <!--<constructor-arg>-->
+            <!--<map>-->
+                <!--<entry key="bootstrap.servers" value="${bootstrap.servers}" />-->
+                <!--<entry key="retries" value="${retries}" />-->
+                <!--<entry key="batch.size" value="${batch.size}" />-->
+                <!--<entry key="linger.ms" value="${linger.ms}" />-->
+                <!--<entry key="buffer.memory" value="${buffer.memory}" />-->
+                <!--<entry key="acks" value="${acks}" />-->
+                <!--<entry key="key.serializer" value="org.apache.kafka.common.serialization.StringSerializer" />-->
+                <!--<entry key="value.serializer" value="org.apache.kafka.common.serialization.StringSerializer" />-->
+            <!--</map>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
 
-    <!-- 定义consumer的参数 -->
-    <bean id="consumerProperties" class="java.util.HashMap">
-        <constructor-arg>
-            <map>
-                <entry key="bootstrap.servers" value="${bootstrap.servers}" />
-                <entry key="group.id" value="${group.id}" />
-                <entry key="enable.auto.commit" value="${enable.auto.commit}" />
-                <entry key="session.timeout.ms" value="${session.timeout.ms}" />
-                <entry key="key.deserializer"
-                       value="org.apache.kafka.common.serialization.StringDeserializer" />
-                <entry key="value.deserializer"
-                       value="org.apache.kafka.common.serialization.StringDeserializer" />
-            </map>
-        </constructor-arg>
-    </bean>
-    <!-- kafka 结束-->
+    <!--&lt;!&ndash; 定义consumer的参数 &ndash;&gt;-->
+    <!--<bean id="consumerProperties" class="java.util.HashMap">-->
+        <!--<constructor-arg>-->
+            <!--<map>-->
+                <!--<entry key="bootstrap.servers" value="${bootstrap.servers}" />-->
+                <!--<entry key="group.id" value="${group.id}" />-->
+                <!--<entry key="enable.auto.commit" value="${enable.auto.commit}" />-->
+                <!--<entry key="session.timeout.ms" value="${session.timeout.ms}" />-->
+                <!--<entry key="key.deserializer"-->
+                       <!--value="org.apache.kafka.common.serialization.StringDeserializer" />-->
+                <!--<entry key="value.deserializer"-->
+                       <!--value="org.apache.kafka.common.serialization.StringDeserializer" />-->
+            <!--</map>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
+    <!--&lt;!&ndash; kafka 结束&ndash;&gt;-->
 
     <!-- 数据库连接池 -->
     <bean id="dataSourceA" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">

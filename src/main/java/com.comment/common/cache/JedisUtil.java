@@ -232,6 +232,25 @@ public class JedisUtil {
 
 
     }
+    /**
+     * hash批量添加
+     * @param key
+     * @param map
+     * @param
+     */
+    public void hmset(String key, Map<String, String> map) {
+        ShardedJedis jedis = sPool.getResource();
+        try {
+            jedis.hmset(key, map);
+        } catch (Exception e) {
+            log.error("错误 : " + e);
+            throw e;
+        } finally {
+            jedis.close();
+        }
+
+
+    }
 
     /**
      * hash批量获取

@@ -1,4 +1,4 @@
-package com.comment.model;
+package com.comment.model.SolrModel;
 
 import org.apache.solr.client.solrj.beans.Field;
 

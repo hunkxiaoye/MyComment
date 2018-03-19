@@ -5,9 +5,7 @@ import com.comment.common.cache.JedisUtil;
 import com.comment.common.Solr.SolrUtil;
 import com.comment.common.kafka.KafkaProducers;
 import com.comment.common.kafka.TestConsumer;
-import com.comment.model.Goods;
-import com.comment.model.Order;
-import com.comment.service.inf.IGoodsService;
+import com.comment.model.SolrModel.Order;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
@@ -31,8 +29,6 @@ import java.util.*;
 @ContextConfiguration({"classpath:spring-mybatis.xml"})
 public class Tests {
     @Autowired
-    private IGoodsService goodsService;
-    @Autowired
     private ShardedJedisPool pool;
 
     @Autowired
@@ -41,43 +37,43 @@ public class Tests {
     @Autowired
     private SolrUtil solrUtil;
 
-    @Test
-    public void Tests() {
-        List<Goods> list = goodsService.findGoodsAll();
-        String key = "TestGoods";
-        ShardedJedis jedis = pool.getResource();
-        String value = JSON.toJSONString(list);
-        jedis.set(key, value);
-        String result = jedis.get("TestGoods");
-        List<Goods> result_list = JSON.parseArray(result, Goods.class);
-        Goods model = result_list.get(1);
-        System.out.println(model);
-        //jedis.sort(key);//排序
-        System.out.println(jedis.exists("TestGoods"));//验证key是否存在
-        jedis.del("TestGoods");//删除key
-        System.out.println(jedis.exists("TestGoods"));//验证key是否存在
-
-        String key1 = "T1";
-        String val = "sadsada";
-        jedis.set(key1, val);
-        jedis.expire(key1, 10000);//设置key的生存时间
-        System.out.println(jedis.ttl(key1));
-        jedis.expire(key1, 9000);//更新生存时间
-        System.out.println(jedis.ttl(key1));
-        jedis.persist(key1);//删除过期时间
-        System.out.println(jedis.ttl(key1));//查看过期时间
-        System.out.println(jedis.type(key1));//返回值类型
-        //NX无则入 XX有则入 PX设置时间（毫秒） EX设置时间（秒）
-        String result_lock = jedis.set("lockKey", UUID.randomUUID().toString(), "NX", "PX", 90);
-        System.out.println(result_lock);
-        jedis.get("lockKey");
-        jedis.del("lockKey");
-
-        HashMap<String, Goods> hashMap = new HashMap<>();
-        hashMap.put("hash", model);
-        jedis.close();
-
-    }
+//    @Test
+//    public void Tests() {
+//        List<Goods> list = goodsService.findGoodsAll();
+//        String key = "TestGoods";
+//        ShardedJedis jedis = pool.getResource();
+//        String value = JSON.toJSONString(list);
+//        jedis.set(key, value);
+//        String result = jedis.get("TestGoods");
+//        List<Goods> result_list = JSON.parseArray(result, Goods.class);
+//        Goods model = result_list.get(1);
+//        System.out.println(model);
+//        //jedis.sort(key);//排序
+//        System.out.println(jedis.exists("TestGoods"));//验证key是否存在
+//        jedis.del("TestGoods");//删除key
+//        System.out.println(jedis.exists("TestGoods"));//验证key是否存在
+//
+//        String key1 = "T1";
+//        String val = "sadsada";
+//        jedis.set(key1, val);
+//        jedis.expire(key1, 10000);//设置key的生存时间
+//        System.out.println(jedis.ttl(key1));
+//        jedis.expire(key1, 9000);//更新生存时间
+//        System.out.println(jedis.ttl(key1));
+//        jedis.persist(key1);//删除过期时间
+//        System.out.println(jedis.ttl(key1));//查看过期时间
+//        System.out.println(jedis.type(key1));//返回值类型
+//        //NX无则入 XX有则入 PX设置时间（毫秒） EX设置时间（秒）
+//        String result_lock = jedis.set("lockKey", UUID.randomUUID().toString(), "NX", "PX", 90);
+//        System.out.println(result_lock);
+//        jedis.get("lockKey");
+//        jedis.del("lockKey");
+//
+//        HashMap<String, Goods> hashMap = new HashMap<>();
+//        hashMap.put("hash", model);
+//        jedis.close();
+//
+//    }
 
     @Test
     public void JedisTest() {

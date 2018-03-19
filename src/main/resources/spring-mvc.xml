@@ -21,19 +21,19 @@
     <mvc:default-servlet-handler/>
 
     <!-- 拦截器 -->
-    <!--<mvc:interceptors>-->
-        <!--<mvc:interceptor>-->
-            <!--<mvc:mapping path="/**"/>-->
-            <!--<mvc:exclude-mapping path="/**/fonts/*"/>-->
-            <!--<mvc:exclude-mapping path="/**/*.css"/>-->
-            <!--<mvc:exclude-mapping path="/**/*.js"/>-->
-            <!--<mvc:exclude-mapping path="/**/*.png"/>-->
-            <!--<mvc:exclude-mapping path="/**/*.gif"/>-->
-            <!--<mvc:exclude-mapping path="/**/*.jpg"/>-->
-            <!--<mvc:exclude-mapping path="/**/*.jpeg"/>-->
-            <!--<bean class="com.userDemo.Interceptor.LoginInterceptor"/>-->
-        <!--</mvc:interceptor>-->
-    <!--</mvc:interceptors>-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/**/fonts/*"/>
+            <mvc:exclude-mapping path="/**/*.css"/>
+            <mvc:exclude-mapping path="/**/*.js"/>
+            <mvc:exclude-mapping path="/**/*.png"/>
+            <mvc:exclude-mapping path="/**/*.gif"/>
+            <mvc:exclude-mapping path="/**/*.jpg"/>
+            <mvc:exclude-mapping path="/**/*.jpeg"/>
+            <bean class="com.comment.Interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 
 
     <mvc:annotation-driven>
