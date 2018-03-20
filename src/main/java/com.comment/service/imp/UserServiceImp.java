@@ -12,7 +12,6 @@ public class UserServiceImp implements IUserService {
     @Autowired
     private UserDao userdao;
 
-    @Transactional
     public User checklogin(String username, String pwd) {
         User user = userdao.findByUsername(username);
         if (user != null && user.getPwd().equals(pwd)) {

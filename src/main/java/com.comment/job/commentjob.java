@@ -1,9 +1,6 @@
 package com.comment.job;
 
 import com.comment.common.Solr.SolrUtil;
-import com.comment.model.Comment;
-import com.comment.service.imp.CommentConsumer;
-import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

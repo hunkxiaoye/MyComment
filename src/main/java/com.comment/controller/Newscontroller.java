@@ -14,7 +14,7 @@ public class Newscontroller {
     @Autowired
     private NewsServiceImp newsService;
 
-    @RequestMapping(value = "/newspage")
+    @RequestMapping(value = "/index")
     public String newslist(Model model) {
         List<News> list =newsService.findAll();
         model.addAttribute("list", list);

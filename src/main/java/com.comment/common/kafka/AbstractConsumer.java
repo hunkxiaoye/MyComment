@@ -45,7 +45,7 @@ public abstract class AbstractConsumer<T>  {
                 list.add(kafkaConf.topic());
                 kafkaConsumer.subscribe(list);
                 while (true) {
-                    ConsumerRecords<String, String> records = kafkaConsumer.poll(100000);
+                    ConsumerRecords<String, String> records = kafkaConsumer.poll(100);
                     for (ConsumerRecord<String, String> record : records) {
                         T t = JSON.parseObject(record.value(), msgClass);
                         this.process(t);

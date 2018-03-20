@@ -15,7 +15,7 @@ public class TestConsumer extends AbstractConsumer<String> {
     public void   process(String msg) {
 
         System.out.println("msg:" + msg);
-        //return "";
+
     }
 
 }

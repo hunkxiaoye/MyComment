@@ -18,7 +18,7 @@ public class Usercontroller {
     private IUserService userService;
 
     @RequestMapping(value = "/login")
-    public String Login() {
+    public String Loginview() {
         return "login";
     }
     //登录验证
@@ -46,7 +46,7 @@ public class Usercontroller {
                 }
 
                 if (returnurl==null||returnurl.isEmpty())
-                    response.sendRedirect("/newspage");
+                    response.sendRedirect("index");
                 else
                     response.sendRedirect(returnurl);
 

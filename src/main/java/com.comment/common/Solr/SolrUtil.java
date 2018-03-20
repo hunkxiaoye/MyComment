@@ -82,6 +82,7 @@ public class SolrUtil {
         QueryResponse response = solrClientUtil.getReadServer(corename).query(solrQuery);
 
         List<T> doc = response.getBeans(clazz);
+        //nums = response.getResults().getNumFound();
         return doc;
     }
 

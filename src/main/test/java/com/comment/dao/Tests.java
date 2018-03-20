@@ -5,7 +5,7 @@ import com.comment.common.cache.JedisUtil;
 import com.comment.common.Solr.SolrUtil;
 import com.comment.common.kafka.KafkaProducers;
 import com.comment.common.kafka.TestConsumer;
-import com.comment.model.SolrModel.Order;
+import com.comment.job.CommentConsumer;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
@@ -204,9 +204,9 @@ public class Tests {
 //        solrUtil.mdelbyid(list,"SimpleOrder");
         Map<String, String> map = new HashMap<>();
         map.put("createTime", "desc");
-        List<Order> orderlist = solrUtil.selectquery("", "SimpleOrder", map, 1, 3, null, null, Order.class);
-        for (Order order : orderlist)
-            System.out.println("id : " + order.getOrderid() + "cinemaName ：" + order.getCinemaname());
+//        List<Order> orderlist = solrUtil.selectquery("", "SimpleOrder", map, 1, 3, null, null, Order.class);
+//        for (Order order : orderlist)
+//            System.out.println("id : " + order.getOrderid() + "cinemaName ：" + order.getCinemaname());
     }
 
     @Autowired
@@ -225,10 +225,15 @@ public class Tests {
     @Autowired
     private TestConsumer testConsumer;
 
-    @Test
-    public void kafkaprocessTest() {
+    @Autowired
+    private CommentConsumer commentConsumer;
 
-        testConsumer.start();
+    @Test
+    public void kafkaprocessTest() throws InterruptedException {
+
+        commentConsumer.start();
+
+        Thread.currentThread().join();
     }
 
 }

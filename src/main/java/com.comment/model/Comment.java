@@ -1,12 +1,19 @@
 package com.comment.model;
 
+import org.apache.solr.client.solrj.beans.Field;
+
 import java.util.Date;
 
 public class Comment {
+    @Field("Id")
     private int id;
+    @Field("UserId")
     private int userid;
+    @Field("CommentInfo")
     private String commentinfo;
+    @Field("CreateTime")
     private Date createtime;
+    @Field("NewsId")
     private int newsid;
 
 
