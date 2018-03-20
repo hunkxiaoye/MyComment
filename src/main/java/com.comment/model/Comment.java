@@ -1,59 +1,22 @@
 package com.comment.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.solr.client.solrj.beans.Field;
 
 import java.util.Date;
-
+@Setter
+@Getter
 public class Comment {
-    @Field("Id")
+    @Field
     private int id;
-    @Field("UserId")
+    @Field
     private int userid;
-    @Field("CommentInfo")
+    @Field
     private String commentinfo;
-    @Field("CreateTime")
+    @Field
     private Date createtime;
-    @Field("NewsId")
+    @Field
     private int newsid;
 
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getUserid() {
-        return userid;
-    }
-
-    public void setUserid(int userid) {
-        this.userid = userid;
-    }
-
-    public String getCommentinfo() {
-        return commentinfo;
-    }
-
-    public void setCommentinfo(String commentinfo) {
-        this.commentinfo = commentinfo;
-    }
-
-    public Date getCreatetime() {
-        return createtime;
-    }
-
-    public void setCreatetime(Date createtime) {
-        this.createtime = createtime;
-    }
-
-    public int getNewsid() {
-        return newsid;
-    }
-
-    public void setNewsid(int newsid) {
-        this.newsid = newsid;
-    }
 }

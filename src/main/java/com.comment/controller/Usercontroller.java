@@ -23,7 +23,7 @@ public class Usercontroller {
     }
     //登录验证
     @RequestMapping(value = "/loginVerify")
-    public String loginverify(HttpServletRequest request, HttpServletResponse response,
+    public String loginverify( HttpServletResponse response,
                               Model model, String username, String password, String returnurl,
                               @RequestParam(required = false)String auto) throws Exception
     {
