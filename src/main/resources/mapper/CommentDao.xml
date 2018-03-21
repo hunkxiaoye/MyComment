@@ -3,6 +3,11 @@
 
 <mapper namespace="com.comment.dao.CommentDao">
     <select id="findAll" resultType="Comment" parameterType="int">
-        SELECT * FROM comment WHERE userid =#{userid}
+        SELECT id,userid,commentinfo,createtime,newsid FROM comment WHERE userid =#{userid}
     </select>
+
+    <insert id="Add" parameterType="Comment">
+        INSERT INTO Comment(id,userid,commentinfo,createtime,newsid) VALUES
+        (#{id},#{userid},#{commentinfo},#{createtime},#{newsid})
+    </insert>
 </mapper>

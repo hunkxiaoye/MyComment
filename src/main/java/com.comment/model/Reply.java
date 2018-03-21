@@ -6,8 +6,8 @@ import org.apache.solr.client.solrj.beans.Field;
 
 import java.util.Date;
 
-@Setter
 @Getter
+@Setter
 public class Reply {
     @Field
     private int id;

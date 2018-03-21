@@ -5,8 +5,8 @@ import lombok.Setter;
 import org.apache.solr.client.solrj.beans.Field;
 
 import java.util.Date;
-@Setter
 @Getter
+@Setter
 public class Comment {
     @Field
     private int id;

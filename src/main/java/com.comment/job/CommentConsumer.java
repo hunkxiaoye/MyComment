@@ -23,7 +23,7 @@ public class CommentConsumer extends AbstractConsumer<Comment> {
 
     protected static final Logger log = LoggerFactory.getLogger(CommentConsumer.class);
     protected static Map<String, String> sort = new HashMap<>();
-    protected static String croename ="SimpleOrder";
+    protected static String croename ="Comment";
     protected static Integer startIndex=1;
     @Autowired
     private ICommentService commentService;

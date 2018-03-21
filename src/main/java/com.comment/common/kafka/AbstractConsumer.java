@@ -40,17 +40,21 @@ public abstract class AbstractConsumer<T>  {
         init();
         for (int i = 0; i < kafkaConf.threads(); i++){
             Thread th = new Thread(()->{
-                //获取消息
-                List<String> list = new ArrayList<>();
-                list.add(kafkaConf.topic());
-                kafkaConsumer.subscribe(list);
-                while (true) {
-                    ConsumerRecords<String, String> records = kafkaConsumer.poll(100);
-                    for (ConsumerRecord<String, String> record : records) {
-                        T t = JSON.parseObject(record.value(), msgClass);
-                        this.process(t);
-                        System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+                try {
+                    //获取消息
+                    List<String> list = new ArrayList<>();
+                    list.add(kafkaConf.topic());
+                    kafkaConsumer.subscribe(list);
+                    while (true) {
+                        ConsumerRecords<String, String> records = kafkaConsumer.poll(100);
+                        for (ConsumerRecord<String, String> record : records) {
+                            T t = JSON.parseObject(record.value(), msgClass);
+                            this.process(t);
+                            System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             });
             th.start();
