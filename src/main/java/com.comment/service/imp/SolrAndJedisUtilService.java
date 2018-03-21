@@ -23,7 +23,7 @@ public class SolrAndJedisUtilService {
     private JedisUtil jedis;
 
     public <T> void addsolr(T t, String corname) throws IOException, SolrServerException {
-        solrUtil.add(t, corname);
+        solrUtil.addAndupdate(t, corname);
     }
 
 
@@ -41,18 +41,18 @@ public class SolrAndJedisUtilService {
      * @throws SolrServerException
      */
     public <T> void addredis(String query, String key, Map<String, String> sort, String croename,
-                             Integer startIndex, Integer pageSize, Integer count, Class<T> clazz)
+                             Integer startIndex, Integer pageSize, Integer count, Class<T> clazz,Long nums)
             throws IOException, SolrServerException {
         Map<String, String> result = new HashMap<>();
         List<T> list = solrUtil.selectquery(query,
                 croename, sort, startIndex, count,
-                null, null, clazz);
+                null, null, clazz,nums);
 
         List<List<T>> lists = ToolsUtils.splitList(list, pageSize);
-        //如果有缓存则删除重新创建
-        if (jedis.hgetAll(String.valueOf(key)) != null) {
-            jedis.del(String.valueOf(key));
-        }
+//        //如果有缓存则删除重新创建
+//        if (jedis.hgetAll(String.valueOf(key)) != null) {
+//            jedis.del(String.valueOf(key));
+//        }
         for (int i = 0; i < lists.size(); i++) {
             result.put(String.valueOf(i + 1), JSON.toJSONString(lists.get(i)));
         }

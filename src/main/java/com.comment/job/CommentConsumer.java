@@ -23,25 +23,25 @@ public class CommentConsumer extends AbstractConsumer<Comment> {
 
     protected static final Logger log = LoggerFactory.getLogger(CommentConsumer.class);
     protected static Map<String, String> sort = new HashMap<>();
-    protected static String croename ="Comment";
-    protected static Integer startIndex=1;
+    protected static String croename = "Comment";
+    protected static Integer startIndex = 1;
     @Autowired
     private ICommentService commentService;
     @Autowired
     private SolrAndJedisUtilService solrAndJedisUtilService;
 
 
-    protected void process(Comment msg) {
+    protected boolean process(Comment msg) {
 
-        sort.put("createTime", "desc");
-        Integer count =100;
-        Integer pagesize =20;
-        String query ="id:"+msg.getNewsid();
-        String key ="news"+msg.getNewsid();
-
+        sort.put("createtime", "desc");
+        Integer count = 100;
+        Integer pagesize = 10;
+        String query = "newsid:" + msg.getNewsid();
+        String key = "news" + msg.getNewsid();
+        Long nums = 0L;
         try {
             adddb(msg);//写入数据库
-            solrAndJedisUtilService.addsolr(msg,croename);//添加索引
+            solrAndJedisUtilService.addsolr(msg, croename);//添加索引
             solrAndJedisUtilService.addredis(
                     query,
                     key,
@@ -50,7 +50,8 @@ public class CommentConsumer extends AbstractConsumer<Comment> {
                     startIndex,
                     pagesize,
                     count,
-                    msg.getClass());//更新缓存
+                    msg.getClass(),
+                    nums);//更新缓存
         } catch (IOException e) {
             log.error("错误" + e);
 
@@ -59,10 +60,11 @@ public class CommentConsumer extends AbstractConsumer<Comment> {
 
         }
 
+        return false;
     }
 
-    private void adddb(Comment comment) {
-        commentService.Add(comment);
+    private Integer adddb(Comment comment) {
+      return commentService.Add(comment);
     }
 
 }

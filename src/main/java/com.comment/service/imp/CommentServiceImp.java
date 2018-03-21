@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 public class CommentServiceImp implements ICommentService {
     @Autowired
     private CommentDao commentDao;
-   public void Add(Comment comment)
+   public Integer Add(Comment comment)
     {
-        commentDao.Add(comment);
+        return commentDao.Add(comment);
     }
 }

@@ -12,10 +12,11 @@ import java.util.List;
 @KafkaConf(topic = "yp_comment", groupid = "test_yp")
 public class TestConsumer extends AbstractConsumer<String> {
 
-    public void   process(String msg) {
+    public boolean   process(String msg) {
 
         System.out.println("msg:" + msg);
 
+        return false;
     }
 
 }

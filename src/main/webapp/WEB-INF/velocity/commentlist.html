@@ -32,8 +32,10 @@
 </table>
 #if($lastpage==0&&$nextpage==0)
 <span>暂时没有评论</span>
+#elseif($nextpage==-1)
+<a href="/comment/getcomment?pagenumber=$lastpage&newsid=$newsid">上一页</a>&nbsp;&nbsp;<a href="#">尾页</a>
 #elseif($lastpage==0)
-<a href="#">首页</a>&nbsp;&nbsp;<a href="/comment/getcomment?pagenumber=$lastpage&newsid=$newsid">下一页</a>
+<a href="/comment/getcomment?pagenumber=0&newsid=$newsid">首页</a>&nbsp;&nbsp;<a href="/comment/getcomment?pagenumber=$nextpage&newsid=$newsid">下一页</a>
 #else
 <a href="/comment/getcomment?pagenumber=$lastpage&newsid=$newsid">上一页</a>&nbsp;&nbsp;<a href="/comment/getcomment?pagenumber=$nextpage&newsid=$newsid">下一页</a>
 #end

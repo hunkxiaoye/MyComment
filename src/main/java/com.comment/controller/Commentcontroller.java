@@ -36,14 +36,19 @@ public class Commentcontroller {
     @RequestMapping(value = "/getcomment")
     public String getcomment(Model model, Integer newsid,@RequestParam(defaultValue = "1") Integer pagenumber){
         //获取指定页缓存列表
-        List<Comment> list =JSON.parseArray(jedis.hmget(String.valueOf(newsid),
+        List<Comment> list =JSON.parseArray(jedis.hmget("news"+newsid,
                 String.valueOf(pagenumber)).get(0),Comment.class);
         if (list==null||list.size()==0) {
-            model.addAttribute("lastpage",0);
-            model.addAttribute("nextpage",0);
+            if (pagenumber!=1){
+                model.addAttribute("lastpage",pagenumber-1);
+                model.addAttribute("nextpage",-1);
+            }else {
+                model.addAttribute("lastpage", 0);
+                model.addAttribute("nextpage", 0);
+            }
         }else {
             model.addAttribute("list",list);
-            if (pagenumber==1) {
+            if (pagenumber==0) {
                 model.addAttribute("lastpage",0);
                 model.addAttribute("nextpage",pagenumber+1);
             }else {

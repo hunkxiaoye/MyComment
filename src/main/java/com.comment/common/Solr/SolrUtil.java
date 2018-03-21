@@ -22,20 +22,89 @@ public class SolrUtil {
     @Autowired
     private SolrClientUtil solrClientUtil;
 
-    public void add(Object model, String corname) throws IOException, SolrServerException {
-        solrClientUtil.getReadServer(corname).addBean(model);
+    public void addAndupdate(Object model, String corname) throws IOException, SolrServerException {
+        solrClientUtil.getWriteServer(corname).addBean(model);
     }
 
     /**
+     * 删除（不推荐）
      *
-     * @param query 查询语句
-     * @param corename 核心名称
-     * @param sort   排序
-     * @param startIndex 开始页数
-     * @param pageSize 每页的条数
+     * @param idname  删除id 名称
+     * @param idvalue
+     * @param corname
+     * @throws IOException
+     * @throws SolrServerException
+     */
+    public void querydel(String idname, Object idvalue, String corname)
+            throws IOException, SolrServerException {
+        String deltxt = idname + ":" + String.valueOf(idvalue);
+        solrClientUtil.getWriteServer(corname).deleteByQuery(deltxt);
+    }
+
+    /**
+     * 批量删除 （不推荐）
+     *
+     * @param idname
+     * @param values
+     * @param corname
+     * @throws IOException
+     * @throws SolrServerException
+     */
+    public void mquerydel(String idname, List<Object> values, String corname)
+            throws IOException, SolrServerException {
+        String deltxt = "";
+        for (int i = 0; i < values.size(); i++) {
+            if (i == (values.size() - 1))
+                deltxt += idname + ":" + String.valueOf(values.get(i));
+            else {
+                deltxt += idname + ":" + String.valueOf(values.get(i) + " OR ");
+            }
+
+        }
+
+        solrClientUtil.getWriteServer(corname).deleteByQuery(deltxt);
+
+    }
+
+    /**
+     * 删除单体
+     *
+     * @param id      索引id
+     * @param corname 核心名称
+     * @throws IOException
+     * @throws SolrServerException
+     */
+    public void delbyid(Object id, String corname) throws IOException, SolrServerException {
+        solrClientUtil.getWriteServer(corname).deleteById(String.valueOf(id));
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param ids     索引id
+     * @param corname 核心名称
+     * @throws IOException
+     * @throws SolrServerException
+     */
+    public void mdelbyid(List<Object> ids, String corname) throws IOException, SolrServerException {
+        List<String> list = new ArrayList<>();
+        for (Object obj : ids) {
+            list.add(String.valueOf(obj));
+        }
+
+        solrClientUtil.getWriteServer(corname).deleteById(list);
+    }
+
+
+    /**
+     * @param query       查询语句
+     * @param corename    核心名称
+     * @param sort        排序
+     * @param startIndex  开始页数
+     * @param pageSize    每页的条数
      * @param facetFileds
      * @param filterQuery
-     * @param clazz 实体类型
+     * @param clazz       实体类型
      * @param <T>
      * @return
      * @throws IOException
@@ -43,12 +112,13 @@ public class SolrUtil {
      */
     public <T> List<T> selectquery(String query, String corename, Map<String, String> sort,
                                    Integer startIndex, Integer pageSize, String[] facetFileds,
-                                   String filterQuery, Class<T> clazz) throws IOException, SolrServerException {
+                                   String filterQuery, Class<T> clazz, Long nums) throws IOException, SolrServerException {
         SolrQuery solrQuery = new SolrQuery();//封装查询参数
-        if (query == null || query.equals("")) {
-            solrQuery.setQuery("*:*");
-        } else {
-            solrQuery.setQuery(query);
+        solrQuery.setQuery("*:*");
+
+        if (filterQuery != null) {
+            solrQuery.setFilterQueries(filterQuery);//fq查询参数
+
         }
 
         if (filterQuery != null) {
@@ -82,72 +152,8 @@ public class SolrUtil {
         QueryResponse response = solrClientUtil.getReadServer(corename).query(solrQuery);
 
         List<T> doc = response.getBeans(clazz);
-        //nums = response.getResults().getNumFound();
+        nums = response.getResults().getNumFound();
         return doc;
     }
 
-    /**
-     * 删除（不推荐）
-     * @param idname 删除id 名称
-     * @param idvalue
-     * @param corname
-     * @throws IOException
-     * @throws SolrServerException
-     */
-    public void querydel(String idname, Object idvalue, String corname)
-            throws IOException, SolrServerException {
-        String deltxt = idname + ":" + String.valueOf(idvalue);
-        solrClientUtil.getReadServer(corname).deleteByQuery(deltxt);
-    }
-
-    /**
-     * 批量删除 （不推荐）
-     * @param idname
-     * @param values
-     * @param corname
-     * @throws IOException
-     * @throws SolrServerException
-     */
-    public void mquerydel(String idname, List<Object> values, String corname)
-            throws IOException, SolrServerException {
-        String deltxt = "";
-        for (int i = 0; i < values.size(); i++) {
-            if (i == (values.size() - 1))
-                deltxt += idname + ":" + String.valueOf(values.get(i));
-            else {
-                deltxt += idname + ":" + String.valueOf(values.get(i) + " OR ");
-            }
-
-        }
-
-        solrClientUtil.getReadServer(corname).deleteByQuery(deltxt);
-
-    }
-
-    /**
-     * 删除单体
-     * @param id 索引id
-     * @param corname 核心名称
-     * @throws IOException
-     * @throws SolrServerException
-     */
-    public void delbyid(Object id, String corname) throws IOException, SolrServerException {
-        solrClientUtil.getReadServer(corname).deleteById(String.valueOf(id));
-    }
-
-    /**
-     * 批量删除
-     * @param ids 索引id
-     * @param corname 核心名称
-     * @throws IOException
-     * @throws SolrServerException
-     */
-    public void mdelbyid(List<Object> ids, String corname) throws IOException, SolrServerException {
-        List<String> list = new ArrayList<>();
-        for (Object obj : ids) {
-            list.add(String.valueOf(obj));
-        }
-
-        solrClientUtil.getReadServer(corname).deleteById(list);
-    }
 }

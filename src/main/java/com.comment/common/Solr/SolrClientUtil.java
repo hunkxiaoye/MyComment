@@ -16,15 +16,17 @@ public class SolrClientUtil {
 
     private static final Object _lock = new Object();
 
-    @Value("${solrUrl}")
-    private String ClientsUrl;
+    @Value("${writesolrUrl}")
+    private String writeClientsurl;
+    @Value("${readsolrUrl}")
+    private String redaClientsurl;
 
     public HttpSolrClient getWriteServer(String coreName) throws IOException {
         String key = coreName + "_Write";
         if (!solrClients.containsKey(coreName)) {
             synchronized (_lock) {
                 if (!solrClients.containsKey(coreName)) {
-                    String writeServerUrl = ClientsUrl + coreName;
+                    String writeServerUrl = writeClientsurl + coreName;
                     HttpSolrClient solrClient = new HttpSolrClient.Builder(writeServerUrl).build();
                     solrClients.put(key, solrClient);
                 }
@@ -40,7 +42,7 @@ public class SolrClientUtil {
         if (!solrClients.containsKey(coreName)) {
             synchronized (_lock) {
                 if (!solrClients.containsKey(coreName)) {
-                    String ReadServerUrl = ClientsUrl + coreName;
+                    String ReadServerUrl = redaClientsurl + coreName;
                     HttpSolrClient solrClient = new HttpSolrClient.Builder(ReadServerUrl).build();
                     solrClients.put(key, solrClient);
                 }
