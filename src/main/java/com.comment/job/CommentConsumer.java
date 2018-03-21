@@ -33,7 +33,7 @@ public class CommentConsumer extends AbstractConsumer<Comment> {
 
     protected boolean process(Comment msg) {
 
-        sort.put("createtime", "desc");
+        sort.put("createtime","desc");
         Integer count = 100;
         Integer pagesize = 10;
         String query = "newsid:" + msg.getNewsid();

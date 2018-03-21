@@ -91,6 +91,6 @@ public class Commentcontroller {
     public String sendcomment(Comment comment) throws Exception {
         comment.setCreatetime(new Date());
         producers.send("yp_comment",comment);
-        return "redirect:getcomment";
+        return "redirect:/getcomment?newsid="+comment.getNewsid();
     }
 }

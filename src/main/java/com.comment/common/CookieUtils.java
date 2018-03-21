@@ -11,7 +11,7 @@ public class CookieUtils {
     /**
      * 密钥
      */
-    private static final String key = "BBDmwTjBsF7IwTIyGWt1bmFntFyUgMQL";
+    private static final String key = "BBDmwTjBsF7IwTIyGWt1bmFntRyUgMQL";
 
     /**
      * 登陆cookie名称
