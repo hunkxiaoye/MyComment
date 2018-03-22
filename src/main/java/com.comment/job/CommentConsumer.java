@@ -34,7 +34,7 @@ public class CommentConsumer extends AbstractConsumer<Comment> {
     protected boolean process(Comment msg) {
 
         sort.put("createtime","desc");
-        Integer count = 100;
+        Integer count = null;
         Integer pagesize = 10;
         String query = "newsid:" + msg.getNewsid();
         String key = "news" + msg.getNewsid();
@@ -42,6 +42,7 @@ public class CommentConsumer extends AbstractConsumer<Comment> {
         try {
             adddb(msg);//写入数据库
             solrAndJedisUtilService.addsolr(msg, croename);//添加索引
+
             solrAndJedisUtilService.addredis(
                     query,
                     key,

@@ -4,6 +4,7 @@ package com.comment.common.Solr;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,9 @@ public class SolrUtil {
     private SolrClientUtil solrClientUtil;
 
     public void addAndupdate(Object model, String corname) throws IOException, SolrServerException {
-        solrClientUtil.getWriteServer(corname).addBean(model);
+        HttpSolrClient client = solrClientUtil.getWriteServer(corname);
+        client.addBean(model);
+        client.commit();
     }
 
     /**

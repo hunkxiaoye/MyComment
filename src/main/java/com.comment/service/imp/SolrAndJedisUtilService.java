@@ -43,6 +43,7 @@ public class SolrAndJedisUtilService {
     public <T> void addredis(String query, String key, Map<String, String> sort, String croename,
                              Integer startIndex, Integer pageSize, Integer count, Class<T> clazz,Long nums)
             throws IOException, SolrServerException {
+
         Map<String, String> result = new HashMap<>();
         List<T> list = solrUtil.selectquery(query,
                 croename, sort, startIndex, count,

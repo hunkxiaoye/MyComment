@@ -39,9 +39,9 @@ public class KafkaProperties {
         consumerPorpertis.put("enable.auto.commit", "true");
         /* 自动确认offset的时间间隔  */
         consumerPorpertis.put("auto.commit.interval.ms", "1000");
-        consumerPorpertis.put("session.timeout.ms", "10000");
+        consumerPorpertis.put("session.timeout.ms", "20000");
         //消息发送的最长等待时间.需大于session.timeout.ms这个时间
-        consumerPorpertis.put("request.timeout.ms", "11000");
+        consumerPorpertis.put("request.timeout.ms", "31000");
         //一次从kafka中poll出来的数据条数
         //max.poll.records条数据需要在在session.timeout.ms这个时间内处理完
         consumerPorpertis.put("max.poll.records","1");
