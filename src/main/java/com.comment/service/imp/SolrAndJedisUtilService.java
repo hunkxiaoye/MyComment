@@ -40,24 +40,41 @@ public class SolrAndJedisUtilService {
      * @throws IOException
      * @throws SolrServerException
      */
-    public <T> void addredis(String query, String key, Map<String, String> sort, String croename,
+    public <T> Boolean addredis(String query, String key, Map<String, String> sort, String croename,
                              Integer startIndex, Integer pageSize, Integer count, Class<T> clazz,Long nums)
             throws IOException, SolrServerException {
 
         Map<String, String> result = new HashMap<>();
         List<T> list = solrUtil.selectquery(query,
-                croename, sort, startIndex, count,
+                croename, sort, startIndex,null,count,
                 null, null, clazz,nums);
 
         List<List<T>> lists = ToolsUtils.splitList(list, pageSize);
-//        //如果有缓存则删除重新创建
-//        if (jedis.hgetAll(String.valueOf(key)) != null) {
-//            jedis.del(String.valueOf(key));
-//        }
+
         for (int i = 0; i < lists.size(); i++) {
             result.put(String.valueOf(i + 1), JSON.toJSONString(lists.get(i)));
         }
-        jedis.hmset(String.valueOf(key), result);
+        if (result.size()!=0) {
+            jedis.hmset(String.valueOf(key), result);
+            return true;
+
+        }
+
+        return false;
 
     }
+
+    public <T> List<T> magicredis(String query, String key, Map<String, String> sort,String croename,
+                                  Integer startIndex,Integer pageSize, Integer count, Class<T> clazz)
+            throws IOException, SolrServerException {
+        Long nums=0L;
+
+        List<T> list = solrUtil.selectquery(query,
+                croename, sort, startIndex,pageSize,null,null,
+                null,clazz,nums);
+        return list;
+
+
+    }
+
 }

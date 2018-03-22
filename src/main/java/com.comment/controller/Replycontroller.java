@@ -81,7 +81,7 @@ public class Replycontroller {
             }
         } else {
             model.addAttribute("list", list);
-            if (pagenumber == 0) {
+            if (pagenumber == 1) {
                 model.addAttribute("lastpage", 0);
                 model.addAttribute("nextpage", pagenumber + 1);
             } else {

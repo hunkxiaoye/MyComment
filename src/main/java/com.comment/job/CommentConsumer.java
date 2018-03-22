@@ -33,10 +33,10 @@ public class CommentConsumer extends AbstractConsumer<Comment> {
     protected boolean process(Comment msg) {
 
         sort.put("createtime", "desc");
-        Integer count = null;
+        Integer count = 300;
         Integer pagesize = 10;
         String query = "newsid:" + msg.getNewsid();
-        String key = "news" + msg.getNewsid();
+        String key  ="news" + msg.getNewsid() ;
         Long nums = 0L;
         try {
             adddb(msg);//写入数据库

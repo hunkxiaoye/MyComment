@@ -114,18 +114,20 @@ public class SolrUtil {
      * @throws SolrServerException
      */
     public <T> List<T> selectquery(String query, String corename, Map<String, String> sort,
-                                   Integer startIndex, Integer pageSize, String[] facetFileds,
+                                   Integer startIndex, Integer pageSize, Integer getsum, String[] facetFileds,
                                    String filterQuery, Class<T> clazz, Long nums) throws IOException, SolrServerException {
         SolrQuery solrQuery = new SolrQuery();//封装查询参数
         solrQuery.setQuery("*:*");
+        if (getsum != null)
+            solrQuery.setRows(getsum);//返回文档的条数
 
         if (filterQuery != null) {
             solrQuery.setFilterQueries(filterQuery);//fq查询参数
 
         }
 
-        if (filterQuery != null) {
-            solrQuery.setFilterQueries(filterQuery);
+        if (query != null) {
+            solrQuery.setFilterQueries(query);
         }
         if (sort != null) {
             //添加排序条件
@@ -151,9 +153,10 @@ public class SolrUtil {
             solrQuery.addFacetField(facetFileds);
         }
 
-
+        List<T> nlist =new ArrayList<>();
         QueryResponse response = solrClientUtil.getReadServer(corename).query(solrQuery);
-
+        if (response.getResults().getNumFound() == 0)
+            return nlist ;
         List<T> doc = response.getBeans(clazz);
         nums = response.getResults().getNumFound();
         return doc;

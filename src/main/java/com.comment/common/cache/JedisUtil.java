@@ -241,6 +241,8 @@ public class JedisUtil {
      * @param
      */
     public void hmset(String key, Map<String, String> map) {
+        if (map.size()==0)
+            return;
         ShardedJedis jedis = sPool.getResource();
         try {
             jedis.hmset(key, map);

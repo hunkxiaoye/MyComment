@@ -30,7 +30,7 @@ public class ReplyConsumer extends AbstractConsumer<Reply> {
     protected boolean process(Reply msg) {
 
         sort.put("createtime", "desc");
-        Integer count = null;
+        Integer count = 300;
         Integer pagesize = 10;
         String query = "comid:" + msg.getComid();
         String key = "comment" + msg.getComid();
