@@ -55,12 +55,14 @@ public abstract class AbstractConsumer<T> {
                                     this.process(t);
                                 } catch (Exception e) {
                                     log.error("消费消息异常", e);
+                                    e.printStackTrace();
                                 }
                                 System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
                             }
                             //kafkaConsumer.commitSync();
                         } catch (Exception e) {
                             log.error("获取消息异常", e);
+                            e.printStackTrace();
                         }
                     }
                 } catch (Exception e) {

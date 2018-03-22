@@ -10,22 +10,26 @@ import org.springframework.web.context.ServletContextAware;
 import javax.servlet.ServletContext;
 
 @Component
-public class commentjob implements InitializingBean,ServletContextAware{
+public class commentjob implements InitializingBean, ServletContextAware {
     @Autowired
     private CommentConsumer commentConsumer;
     @Autowired
-    private SolrUtil solrUtil;
+    private ReplyConsumer replyConsumer;
 
 
     public void Start() {
 
         //执行从队列获取评论插入数据库并创建索引
         try {
-            System.out.println("任务开始");
+            System.out.println("评论相关任务开始");
             commentConsumer.start();
+            System.out.println("回复相关任务开始");
+            replyConsumer.start();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
 
@@ -37,6 +41,8 @@ public class commentjob implements InitializingBean,ServletContextAware{
             e.printStackTrace();
         }
     }
-    public void afterPropertiesSet() throws Exception{}
+
+    public void afterPropertiesSet() throws Exception {
+    }
 
 }

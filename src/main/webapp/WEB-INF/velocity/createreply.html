@@ -1,0 +1,16 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>添加回复</title>
+</head>
+<body>
+<form action="/comment/sendreply" method="post">
+    <span> 内容</span><input type="text" name="replyinfo" value=""/>
+    <input type="hidden" name="comid" value="$model.comid">
+    <input type="hidden" name="userid" value="$model.Userid">
+    <input type="hidden" name="cominfo" value="$text">
+    <button type="submit">发表</button>
+</form>
+</body>
+</html>

@@ -1,8 +1,8 @@
-package com.comment.dao;
+package com.comment.service.inf;
 
 import com.comment.model.Reply;
 
-public interface ReplyDao {
+public interface IReplyService {
     Integer Add(Reply reply);
     Reply select(Integer id);
 }

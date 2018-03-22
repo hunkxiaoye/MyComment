@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>评论详情页</title>
+</head>
+<body>
+<h5>$commentInfo</h5>
+<span>--------------------------------------------------------------------------------</span>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+        </th>
+        <th>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    #foreach($item in $list)
+    <tr>
+        <td>
+            $item.replyinfo
+        </td>
+
+        <td>
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+#if($lastpage==0&&$nextpage==0)
+<span>暂时没有评论</span>
+#elseif($nextpage==-1)
+<a href="/comment/getcommentdetail?pagenumber=$lastpage&comid=$comid&text=$commentInfo">上一页</a>&nbsp;&nbsp;<a href="#">尾页</a>
+#elseif($lastpage==0)
+<a href="/comment/getcommentdetail?pagenumber=0&comid=$comid">首页</a>&nbsp;&nbsp;<a href="/comment/getcommentdetail?pagenumber=$nextpage&comid=$comid&text=$commentInfo">下一页</a>
+#else
+<a href="/comment/getcommentdetail?pagenumber=$lastpage&comid=$comid&text=$commentInfo">上一页</a>&nbsp;&nbsp;<a href="/comment/getcommentdetail?pagenumber=$nextpage&comid=$comid&text=$commentInfo">下一页</a>
+#end
+<a href="/comment/addreplypage?comid=$comid&text=$commentInfo">添加回复</a>
+</body>
+</html>

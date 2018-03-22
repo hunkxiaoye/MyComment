@@ -3,6 +3,14 @@
 
 <mapper namespace="com.comment.dao.ReplyDao">
     <select id="findAll" resultType="Reply" parameterType="int">
-        SELECT * FROM reply WHERE userid =#{userid}
+        SELECT id,comid,userid,replyinfo,createtime FROM reply WHERE userid =#{userid}
     </select>
+
+    <insert id="Add" parameterType="Reply" >
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO Reply(id,comid,userid,replyinfo,createtime) VALUES
+        (#{id},#{comid},#{userid},#{replyinfo},#{createtime})
+    </insert>
 </mapper>

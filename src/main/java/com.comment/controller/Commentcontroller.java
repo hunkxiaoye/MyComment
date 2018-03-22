@@ -7,6 +7,8 @@ import com.comment.common.ToolsUtils;
 import com.comment.common.cache.JedisUtil;
 import com.comment.common.kafka.KafkaProducers;
 import com.comment.model.Comment;
+import com.comment.model.Reply;
+import com.comment.service.inf.ICommentService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,8 @@ public class Commentcontroller {
     private JedisUtil jedis;
     @Autowired
     private KafkaProducers producers;
+    @Autowired
+    private ICommentService commentService;
 
 
     /**
@@ -63,6 +67,8 @@ public class Commentcontroller {
         return "commentlist";
 
     }
+
+
 
     /**
      * 展示添加评论页
