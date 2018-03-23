@@ -199,7 +199,11 @@ public class Tests {
 
     @Test
     public void solrUtil() {
-       // Date date = new Date(new Date().getTime() - 600000 * 2);
+        Date date = new Date(new Date().getTime() - 600000 * 2);
+      String d =  JSON.toJSONString(date);
+        System.out.println(date);
+        Date dd =JSON.parseObject(d,Date.class);
+        System.out.println(dd);
         List<Comment> commentList = commentService.findAllByTime();
         //System.out.println(new Date());
         if (commentList.size() == 0)
