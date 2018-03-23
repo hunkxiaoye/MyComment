@@ -22,7 +22,9 @@
         <td>
             $item.commentinfo
         </td>
-
+        <td>
+            $dataTool.format("yyyy-MM-dd HH:mm",$item.createtime)
+        </td>
         <td>
             <a href="/comment/getcommentdetail?commentid=$item.id&text=$item.commentinfo">查看详细</a>
         </td>
