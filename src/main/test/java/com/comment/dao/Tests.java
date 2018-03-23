@@ -6,6 +6,8 @@ import com.comment.common.Solr.SolrUtil;
 import com.comment.common.kafka.KafkaProducers;
 import com.comment.common.kafka.TestConsumer;
 import com.comment.job.CommentConsumer;
+import com.comment.model.Comment;
+import com.comment.service.inf.ICommentService;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
@@ -191,22 +193,19 @@ public class Tests {
 
     }
 
+    @Autowired
+    private ICommentService commentService;
+    private String commentCorname = "Comment";
+
     @Test
-    public void solrUtil() throws IOException, SolrServerException {
-//        Order order = new Order();
-//        order.setOrderId(10010L);
-//        order.setCinemaName("黄石万达");
-//        solrUtil.add(order,"SimpleOrder");
-//       // solrUtil.del("orderId",10010,"SimpleOrder");
-//        List<Object> list =new ArrayList<>();
-//        list.add(1076583647);
-//        list.add(21312313);
-//        solrUtil.mdelbyid(list,"SimpleOrder");
-        Map<String, String> map = new HashMap<>();
-        map.put("createTime", "desc");
-//        List<Order> orderlist = solrUtil.selectquery("", "SimpleOrder", map, 1, 3, null, null, Order.class);
-//        for (Order order : orderlist)
-//            System.out.println("id : " + order.getOrderid() + "cinemaName ：" + order.getCinemaname());
+    public void solrUtil() {
+       // Date date = new Date(new Date().getTime() - 600000 * 2);
+        List<Comment> commentList = commentService.findAllByTime();
+        //System.out.println(new Date());
+        if (commentList.size() == 0)
+            return;
+
+        solrUtil.addAndupdate(commentList, commentCorname);
     }
 
     @Autowired

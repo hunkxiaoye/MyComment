@@ -123,7 +123,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.46</version>
+            <version>1.2.47</version>
         </dependency>
         <!--fastjson  结束-->
         <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->

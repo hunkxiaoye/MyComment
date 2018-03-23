@@ -23,10 +23,30 @@ public class SolrUtil {
     @Autowired
     private SolrClientUtil solrClientUtil;
 
-    public void addAndupdate(Object model, String corname) throws IOException, SolrServerException {
-        HttpSolrClient client = solrClientUtil.getWriteServer(corname);
-        client.addBean(model);
-        client.commit();
+    public <T> void addAndupdate(T model, String corname) {
+
+        try {
+            HttpSolrClient client = solrClientUtil.getWriteServer(corname);
+            client.addBean(model);
+            client.commit();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public <T> void addAndupdate(List<T> list, String corname) {
+
+        try {
+            HttpSolrClient client = solrClientUtil.getWriteServer(corname);
+            client.addBeans(list);
+            client.commit();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SolrServerException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

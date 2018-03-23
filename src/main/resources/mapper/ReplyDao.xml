@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.comment.dao.ReplyDao">
-    <select id="findAll" resultType="Reply" parameterType="int">
+    <select id="findAll" resultType="Reply" parameterType="Date">
         SELECT id,comid,userid,replyinfo,createtime FROM reply WHERE userid =#{userid}
     </select>
 
@@ -13,4 +13,8 @@
         INSERT INTO Reply(id,comid,userid,replyinfo,createtime) VALUES
         (#{id},#{comid},#{userid},#{replyinfo},#{createtime})
     </insert>
+
+    <select id="findAllByTime" resultType="Reply" parameterType="Date">
+        <![CDATA[ SELECT id,comid,userid,replyinfo,createtime FROM reply WHERE  createtime > now()-20]]>
+    </select>
 </mapper>

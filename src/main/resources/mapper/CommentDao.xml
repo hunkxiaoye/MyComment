@@ -13,4 +13,8 @@
         INSERT INTO Comment(id,userid,commentinfo,createtime,newsid) VALUES
         (#{id},#{userid},#{commentinfo},#{createtime},#{newsid})
     </insert>
+
+    <select id="findAllByTime" resultType="Comment" >
+      <![CDATA[SELECT id,userid,commentinfo,createtime,newsid FROM comment WHERE  createtime>now()-20]]>
+    </select>
 </mapper>

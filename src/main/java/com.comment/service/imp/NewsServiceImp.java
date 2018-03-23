@@ -12,8 +12,8 @@ import java.util.List;
 public class NewsServiceImp implements INewsService {
     @Autowired
     private NewsDao newsDao;
-    public List<News> findAll()
-    {
+
+    public List<News> findAll() {
         return newsDao.findAll();
     }
 }
