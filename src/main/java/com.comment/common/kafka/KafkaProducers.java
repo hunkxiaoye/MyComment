@@ -19,22 +19,25 @@ public class KafkaProducers {
     private void init() {
         if (kafkaProducers == null) {
             synchronized (KafkaProducers.class) {
-                Properties properties = new Properties();
-                properties.putAll(kafkaProperties.getProducerPorpertis());
-                kafkaProducers = new KafkaProducer<>(properties);
+                if (kafkaProducers == null) {
+                    Properties properties = new Properties();
+                    properties.putAll(kafkaProperties.getProducerPorpertis());
+                    kafkaProducers = new KafkaProducer<>(properties);
+                }
             }
         }
     }
 
     /**
      * 生产消息
+     *
      * @param topic 类型
-     * @param msg 消息体
+     * @param msg   消息体
      */
     public void send(String topic, Object msg) {
         init();
         String key = String.valueOf(System.currentTimeMillis());
-        kafkaProducers.send(new ProducerRecord<>(topic,key,JSON.toJSONString(msg)));
+        kafkaProducers.send(new ProducerRecord<>(topic, key, JSON.toJSONString(msg)));
     }
 
     /**

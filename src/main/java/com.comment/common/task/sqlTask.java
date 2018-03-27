@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 数据库同步到索引定时任务
+ */
 @Component
 public class sqlTask {
     private static final Logger log = LoggerFactory.getLogger(sqlTask.class);

@@ -1,8 +1,6 @@
 package com.comment.common.cache;
 
 import com.alibaba.fastjson.JSON;
-
-import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -221,6 +219,8 @@ public class JedisUtil {
      * @param seconds
      */
     public void hmset(String key, Map<String, String> map, int seconds) {
+        if (map.size()==0)
+            return;
         ShardedJedis jedis = sPool.getResource();
         try {
             jedis.hmset(key, map);

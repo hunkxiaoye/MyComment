@@ -13,6 +13,7 @@ import org.springframework.core.ResolvableType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 
@@ -59,7 +60,6 @@ public abstract class AbstractConsumer<T> {
                                 }
                                 System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
                             }
-                            //kafkaConsumer.commitSync();
                         } catch (Exception e) {
                             log.error("获取消息异常", e);
                             e.printStackTrace();

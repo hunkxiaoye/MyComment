@@ -35,6 +35,12 @@ public class Newscontroller {
         return "newspage";
     }
 
+    /**
+     * 从搜索引擎获取数据重新创建缓存
+     * @return
+     * @throws IOException
+     * @throws SolrServerException
+     */
     @RequestMapping(value = "/magic")
     public String magic() throws IOException, SolrServerException {
         Map<String, String> sort = new HashMap<>();
@@ -72,6 +78,7 @@ public class Newscontroller {
                     if (commentslist.size()==0)
                         break;
                 }
+                //获取前20页评论创建缓存
                 if (sum < 21) {
                    // List<List<Comment>> lists = ToolsUtils.splitList(commentslist, pagesize);
                     Map<String, String> result = new HashMap<>();
