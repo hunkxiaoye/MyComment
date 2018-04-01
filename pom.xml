@@ -133,7 +133,6 @@
             <version>1.10</version>
         </dependency>
 
-
         <!-- https://mvnrepository.com/artifact/org.jgroups/jgroups -->
         <dependency>
             <groupId>org.jgroups</groupId>
@@ -214,6 +213,14 @@
         </dependency>
         <!--sorl 结束-->
 
+        <!--Es 开始-->
+        <!-- https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch -->
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <version>5.6.3</version>
+        </dependency>
+        <!--Es 结束-->
         <!--kafka 开始-->
         <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka -->
         <dependency>

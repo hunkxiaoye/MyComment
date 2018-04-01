@@ -1,4 +1,4 @@
-package com.comment.common;
+package com.comment.common.util;
 
 import java.util.ArrayList;
 import java.util.List;
