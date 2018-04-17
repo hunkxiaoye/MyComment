@@ -1,15 +1,13 @@
 package com.comment.dao;
 
 import com.alibaba.fastjson.JSON;
-import com.comment.TestComment;
+import com.comment.modelComment;
 import com.comment.common.Elasticsearch.EsWriteUtils;
 import com.comment.common.Elasticsearch.esSearchUtil;
-import com.comment.common.Elasticsearch.meta.SearchResult;
 import com.comment.common.cache.JedisUtil;
 import com.comment.common.Solr.SolrUtil;
 import com.comment.common.kafka.KafkaProducers;
 import com.comment.common.kafka.TestConsumer;
-import com.comment.common.util.Utils;
 import com.comment.job.CommentConsumer;
 import com.comment.model.Comment;
 import com.comment.service.inf.ICommentService;
@@ -21,7 +19,6 @@ import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
-import org.elasticsearch.search.sort.SortOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -258,20 +255,20 @@ public class Tests {
 //        List<Comment> list =JSON.parseArray(jedis.hmget("news"+1,
 //                String.valueOf(1)).get(0),Comment.class);
         String clusterName = "elasticsearch";
-//       // esUtils.update(clusterName,list, "yptest", "yptest");
+//       esUtils.update(clusterName,list, "yptest", "yptest");
 //        Comment comment =list.get(1);
         // comment.setCreatetime(LocalDateTime.now());
-//        List<TestComment> list = new ArrayList<>();
-//        for (int i = 0; i < 4; i++) {
-//            TestComment c = new TestComment();
-//            c.setCommentinfo("upadte-------list" + i);
-//            c.setId(i + 10);
-//            c.setNewsid(1);
-//            c.setUserid(1);
-//            c.setCreatetime(LocalDateTime.now());
-//            list.add(c);
-//        }
-//        esWriteUtils.addIndex(clusterName, list.get(1));
+        List<modelComment> list = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            modelComment c = new modelComment();
+            c.setCommentinfo("upadte-------list" + i);
+            c.setId(i + 10);
+            c.setNewsid(1);
+            c.setUserid(1);
+            c.setCreatetime(LocalDateTime.now());
+            list.add(c);
+        }
+        esWriteUtils.addIndex(clusterName, list.get(1));
  //       esWriteUtils.addIndexList(clusterName, list);
 //        esWriteUtils.updateIndex(clusterName,list.get(1));
 //        esWriteUtils.updateIndexList(clusterName,list);
@@ -282,17 +279,17 @@ public class Tests {
 //        ids.add("13");
 //          //esWriteUtils.deleteIndex(clusterName,TestComment.class,"11");
 //          esWriteUtils.deleteIndexList(TestComment.class,ids,clusterName);
-        Map<String, SortOrder> sort = new HashMap<>();
-        sort.put("createtime", SortOrder.DESC);
-        Integer count = 300;
-        Integer pagesize = 10;
-        String query = "id:" + 14;
-        Map<String,Object> param = new HashMap<>();
-        SearchResult<TestComment> result = searchUtil.query(TestComment.class,param, sort,query, 1, 10,clusterName);
-        List<TestComment> lists = result.getSearchList();
-        for (TestComment testComment : lists) {
-            System.out.println(Utils.toJson(testComment));
-        }
+//        Map<String, SortOrder> sort = new HashMap<>();
+//        sort.put("createtime", SortOrder.DESC);
+//        Integer count = 300;
+//        Integer pagesize = 10;
+//        String query = "id:" + 14;
+//        Map<String,Object> param = new HashMap<>();
+//        SearchResult<TestComment> result = searchUtil.query(TestComment.class,param, sort,query, 1, 10,clusterName);
+//        List<TestComment> lists = result.getSearchList();
+//        for (TestComment testComment : lists) {
+//            System.out.println(Utils.toJson(testComment));
+//        }
 //
 //        List<Comment> list = result.getSearchList();
 //        for (Comment member : list) {

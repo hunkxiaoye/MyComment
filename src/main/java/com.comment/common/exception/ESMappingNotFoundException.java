@@ -3,7 +3,7 @@ package com.comment.common.exception;
 /**
  * ES索引映射没有找到的异常
  *
- * @author 史彦磊
+ * @author
  * @create 2017-11-07 10:55.
  */
 public class ESMappingNotFoundException extends RuntimeException {

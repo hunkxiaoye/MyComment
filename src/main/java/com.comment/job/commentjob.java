@@ -1,9 +1,7 @@
 package com.comment.job;
 
-import com.comment.common.Solr.SolrUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.ServletContextAware;
 
