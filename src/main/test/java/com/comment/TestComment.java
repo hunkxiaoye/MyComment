@@ -8,7 +8,7 @@ import org.apache.solr.client.solrj.beans.Field;
 import java.time.LocalDateTime;
 @Setter
 @Getter
-public class modelComment extends BaseModel<Integer> {
+public class TestComment extends BaseModel<Integer> {
     @Field
     private int userid;
     @Field

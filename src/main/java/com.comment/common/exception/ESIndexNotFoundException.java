@@ -3,7 +3,7 @@ package com.comment.common.exception;
 /**
  * ES索引没有找到的异常
  *
- * @author
+ * @author 史彦磊
  * @create 2017-11-07 10:55.
  */
 public class ESIndexNotFoundException extends RuntimeException {
